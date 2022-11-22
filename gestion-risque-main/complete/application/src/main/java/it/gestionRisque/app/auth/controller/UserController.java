@@ -1,5 +1,5 @@
 //package Auth.Controller;
-package it.gestionRisque.controller;
+package it.gestionRisque.app.auth.controller;
 
 import java.util.List;
 import java.util.Optional;
@@ -49,7 +49,6 @@ public class UserController {
 	
 	
 	@GetMapping("/user")
-
 	public ResponseEntity<List<User>> getUsers(){
 		try {
 			List<User> user = accountService.ListUsers();
@@ -85,7 +84,7 @@ public class UserController {
 			
 	}
 	
-	 @RequestMapping(value = "/users/save", method = RequestMethod.POST)
+	 @PostMapping("/users/save")
 	public ResponseEntity<User> saveUser(@RequestBody User user){
 		 try {
 				accountService.addNewUser(user);

@@ -32,10 +32,10 @@ private final UploadUtil uploadUtil;
 	
 	int k=0;
 	
-	public List<Map<String, String>> upload() throws Exception {
+	public List<Map<String, String>> upload(String fileName) throws Exception {
 
 
-		Workbook workbook = new  XSSFWorkbook("E:/v2/Risk-Management/src/main/resources/static/exemples.xlsx");
+		Workbook workbook = new  XSSFWorkbook(fileName);
 		
 
 		Sheet sheet = workbook.getSheetAt(0);

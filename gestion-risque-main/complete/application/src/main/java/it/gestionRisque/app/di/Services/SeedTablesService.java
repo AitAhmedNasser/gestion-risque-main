@@ -57,7 +57,9 @@ public class SeedTablesService {
 		List<Compte> compteList = new ArrayList<Compte>();
 		List<Impaye> impayeList = new ArrayList<Impaye>();
 		
-		List<Map<String, String>> data = uploadService.upload();
+		String fileName = "E:/v2/Risk-Management/src/main/resources/static/exemples.xlsx";
+		
+		List<Map<String, String>> data = uploadService.upload(fileName);
 		 
 		List<String> existingClient = new ArrayList<String>();
 		List<String> existingCompte = new ArrayList<String>();

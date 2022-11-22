@@ -6,6 +6,8 @@ import java.util.Map;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import it.gestionRisque.app.di.Services.ExcelToJsonService;
@@ -21,8 +23,8 @@ private final ExcelToJsonService uploadService;
 	}
 	
 	@PostMapping("/upload")
-	public List<Map<String, String>> upload() throws Exception{
-		return uploadService.upload();
+	public List<Map<String, String>> upload(@RequestBody String fileName) throws Exception{
+		return uploadService.upload(fileName);
 	}
 	@GetMapping("/")
 	public String welcome() {

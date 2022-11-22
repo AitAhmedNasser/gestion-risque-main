@@ -1,5 +1,5 @@
 //package Auth.Controller;
-package it.gestionRisque.controller;
+package it.gestionRisque.app.auth.controller;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
