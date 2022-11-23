@@ -108,15 +108,15 @@ public class RepportServices {
 	    //get list columnName Property name of entreprise
 	    List <String> columnNamesEntreprise = keyColumns.getEntrepriseKey();
 	    //create jasper print
-	  JasperPrint jpEntreprise=  this.createJP(entrepriseData, periodesEntreprise, columnNamesEntreprise, dataStyle,"credit Entreprise");
+	  JasperPrint jpEntreprise=  this.createJP(entrepriseData, periodesEntreprise, columnNamesEntreprise, dataStyle,"Crédit Entreprise");
 	  
 	  List<String> periodesRetails = periode.getPeriodeRetails();
 	  List <String> columnNamesRetails = keyColumns.getRetailKey();
-	  JasperPrint jpRetail=  this.createJP(retailData,periodesRetails, columnNamesRetails, dataStyle,"credit Retail");
+	  JasperPrint jpRetail=  this.createJP(retailData,periodesRetails, columnNamesRetails, dataStyle,"Crédit Retail");
 	  
 	  List<String> periodesTotal = periode.getPeriodeTotal();
 	  List <String> columnNames3 = keyColumns.getTotalKey();
-	  JasperPrint jpTotal=  this.createJP(totalsData,periodesTotal, columnNames3, dataStyle,"credit Total");
+	  JasperPrint jpTotal=  this.createJP(totalsData,periodesTotal, columnNames3, dataStyle,"Crédit Total");
 	  
 		List<JasperPrint> list = new ArrayList<JasperPrint>();
 		list.add(jpEntreprise);
@@ -143,11 +143,12 @@ public class RepportServices {
 	    exporter.setExporterOutput(new SimpleOutputStreamExporterOutput(pdfOutputStream));
 	   
 	    
-exporter.setExporterOutput(outputStream);
+        // exporter.setExporterOutput(outputStream);
 	    exporter.exportReport();
 	    byte[] data = pdfOutputStream.toByteArray();
 		
 	    pdfOutputStream.close();
+	    System.out.println("data<<<<<<<<<<"+data);
 		 HttpHeaders headers = new HttpHeaders();
 		  headers.set(HttpHeaders.CONTENT_DISPOSITION, "inline;filename=reporting.pdf");
 		return   ResponseEntity.ok().headers(headers).contentType(MediaType.APPLICATION_PDF).body(data);
