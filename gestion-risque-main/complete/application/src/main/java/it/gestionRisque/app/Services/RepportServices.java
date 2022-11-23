@@ -79,7 +79,7 @@ public class RepportServices {
 
 		JSONObject jsonObject = new JSONObject(json);		
 
-		//System.out.println(" json   " +json);
+		System.out.println(" json   " +json);
 		//get periode Object
 	    Periodes periode = mapper.readValue(jsonObject.get("periode").toString(),  Periodes.class);
 	    //get Key column Object

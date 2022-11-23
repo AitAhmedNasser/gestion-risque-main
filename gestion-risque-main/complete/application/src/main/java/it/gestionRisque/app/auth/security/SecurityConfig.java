@@ -68,13 +68,13 @@ public SecurityConfig(PasswordEncoder passwordEncoder,UserDetailsService userDet
 		http.cors().and().csrf().disable()
 		.exceptionHandling().authenticationEntryPoint(unauthorizedHandler).and()
 		.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
-//		 .authorizeRequests(authorizeRequests ->
-//	        authorizeRequests
-//	            .antMatchers("/api/user").hasAnyAuthority("ConsulterUser")
-//	            .antMatchers("/api/roles").hasAnyAuthority("ConsulterRole")
-//	            .antMatchers("/api/ressources").hasAnyAuthority("ConsulterRessources")
-//	          //  .antMatchers("/creditParticulier/**").hasAnyAuthority("ConsulterUser")
-//	    )
+		 .authorizeRequests(authorizeRequests ->
+	        authorizeRequests
+	            .antMatchers("/api/user").hasAnyAuthority("ConsulterUser")
+	            .antMatchers("/api/roles").hasAnyAuthority("ConsulterRole")
+	            .antMatchers("/api/ressources").hasAnyAuthority("ConsulterRessources")
+	            .antMatchers("/creditParticulier/**").hasAnyAuthority("ConsulterUser")
+	    )
 
 		.authorizeRequests().antMatchers("/Auth/signin","api/Ressources/","api/privileges","/creditParticulier/**").permitAll()
 		.anyRequest().permitAll();
