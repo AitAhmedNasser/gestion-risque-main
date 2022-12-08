@@ -35,6 +35,10 @@ private final UploadUtil uploadUtil;
 	int k=0;
 	
 	public List<Map<String, String>> upload(MultipartFile file) throws Exception {
+		//***** Local path *****
+		//String filePath ="C:\\Users\\pc\\Desktop\\backend-machine\\gestion-des-risques\\gestion-risque-main\\complete\\application\\src\\main\\resources\\"+file.getOriginalFilename();
+		
+		// ***** Remote Path *****
 		String filePath ="/home/gstrisques/Desktop/excel-files/"+file.getOriginalFilename();
 		File fileToMove = new File(filePath);
 		file.transferTo(fileToMove);
