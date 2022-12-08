@@ -15,6 +15,7 @@ import org.apache.poi.ss.usermodel.DateUtil;
 import org.hibernate.annotations.Synchronize;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import it.gestionRisque.app.Entities.Client;
 import it.gestionRisque.app.Entities.Compte;
@@ -51,15 +52,15 @@ public class SeedTablesService {
 	}
 	
 	
-	public void addToTables() throws Exception {
+	public void addToTables(MultipartFile file) throws Exception {
 		List<Client> clientList = new ArrayList<Client>();
 		List<Engagement> engagementList = new ArrayList<Engagement>();
 		List<Compte> compteList = new ArrayList<Compte>();
 		List<Impaye> impayeList = new ArrayList<Impaye>();
 		
-		String fileName = "E:/v2/Risk-Management/src/main/resources/static/exemples.xlsx";
+		//String fileName = "E:/v2/Risk-Management/src/main/resources/static/exemples.xlsx";
 		
-		List<Map<String, String>> data = uploadService.upload(fileName);
+		List<Map<String, String>> data = uploadService.upload(file);
 		 
 		List<String> existingClient = new ArrayList<String>();
 		List<String> existingCompte = new ArrayList<String>();

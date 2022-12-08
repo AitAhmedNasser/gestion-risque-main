@@ -2,6 +2,7 @@ package it.gestionRisque.app.di.Services;
 
 
 
+import java.io.File;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -16,6 +17,7 @@ import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import it.gestionRisque.app.di.Utils.UploadUtil;
 
@@ -32,11 +34,13 @@ private final UploadUtil uploadUtil;
 	
 	int k=0;
 	
-	public List<Map<String, String>> upload(String fileName) throws Exception {
+	public List<Map<String, String>> upload(MultipartFile file) throws Exception {
+		String filePath ="/home/gstrisques/Desktop/excel-files/"+file.getOriginalFilename();
+		File fileToMove = new File(filePath);
+		file.transferTo(fileToMove);
 
-
-		Workbook workbook = new  XSSFWorkbook(fileName);
-		
+		Workbook workbook = new  XSSFWorkbook(filePath);
+		fileToMove.delete();
 
 		Sheet sheet = workbook.getSheetAt(0);
 		
