@@ -49,16 +49,16 @@ private Integer entitieCode;
 @Column(name = "borrowerType")
 private String  borrowerType;
 
-@Column()
+@Column(name = "ID_GROUPE")
 private String groupId;
 
-@Column()
+@Column(name = "NOM_GROUPE")
 private String groupName;
 
-@Column()
+@Column(name = "ID_AGENCE")
 private String solId;
 
-@Column()
+@Column(name = "NOM_AGENCE")
 private String solDescription;
 
 @Column(name = "CLASS_PRINCIPALE_CLIENT")
