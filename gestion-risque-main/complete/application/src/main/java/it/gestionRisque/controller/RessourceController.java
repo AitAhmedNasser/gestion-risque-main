@@ -26,7 +26,6 @@ import it.gestionRisque.app.auth.service.RessourceService;
 import it.gestionRisque.app.auth.service.ServiceImp.RessourceServiceImp;
 import it.gestionRisque.app.auth.entities.Privilege;
 import it.gestionRisque.app.auth.entities.Permissions;
-import it.gestionRisque.app.auth.entities.PermissionsToRoleForm;
 import it.gestionRisque.app.auth.entities.Ressource;
 import it.gestionRisque.app.auth.entities.Role;
 import it.gestionRisque.app.auth.entities.User;
@@ -43,18 +42,18 @@ public class RessourceController {
 	@Autowired
 	private PermissionRepo permissionRepo;
 	
-	@PostMapping("/permissions/add")
-	public ResponseEntity<Permissions> addPermissions(Long id_Privileges, Long id_Ressources){
-		try {
-			Permissions per = ressService.addPermissions(id_Privileges, id_Ressources);
-			return  new ResponseEntity<>(per, HttpStatus.CREATED);
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-			return  new ResponseEntity(e.getMessage(), HttpStatus.BAD_REQUEST);
-		}
-	}
-	
+//	@PostMapping("/permissions/add")
+//	public ResponseEntity<Permissions> addPermissions(Long id_Privileges, Long id_Ressources){
+//		try {
+//			Permissions per = ressService.addPermissions(id_Privileges, id_Ressources);
+//			return  new ResponseEntity<>(per, HttpStatus.CREATED);
+//		} catch (Exception e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//			return  new ResponseEntity(e.getMessage(), HttpStatus.BAD_REQUEST);
+//		}
+//	}
+//	
 	@PostMapping("/permissions/save")
 	public ResponseEntity<Permissions> savePermissions(@RequestBody Permissions permissions){
 		try {
@@ -67,37 +66,37 @@ public class RessourceController {
 		}
 	}
 	
-	
-	@RequestMapping(value = "/permissions/addPermissionsToRole",method = RequestMethod.POST)
-	public ResponseEntity<?> addPermissionsToRoles(Long id_Roles, Long id_Permissions){
-		Role role = roleRepo.getRoleById(id_Roles);
-		Permissions permission = permissionRepo.getPermissionsById(id_Permissions);
-		try {
-			ressService.PrermissionsToRoles(id_Roles, id_Permissions);
-			return  new ResponseEntity("la permission ' "+permission.getNamepermission()+" ' est affecter a un role ' "+role.getName()+" '", HttpStatus.CREATED);
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-			return new ResponseEntity(e.getMessage(),HttpStatus.BAD_REQUEST);
-		}
-	}
-
-	@RequestMapping(value = "/permissions/RemovePermissionsToRole",method = RequestMethod.POST)
-	public ResponseEntity<?> RemovePermissionToRole(Long id_Roles, Long id_Permissions){
-		Role role = roleRepo.getRoleById(id_Roles);
-		Permissions permission = permissionRepo.getPermissionsById(id_Permissions);
-		
-		try {
-			ressService.RemovePermissionToRole(id_Roles, id_Permissions);
-			return  new ResponseEntity("la permission ' "+permission.getNamepermission()+" ' est disactiver pour le role  ' "+role.getName()+" '", HttpStatus.ACCEPTED);
-			
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-			return new ResponseEntity(e.getMessage(),HttpStatus.BAD_REQUEST);
-		
-		}
-	}
+//	
+//	@RequestMapping(value = "/permissions/addPermissionsToRole",method = RequestMethod.POST)
+//	public ResponseEntity<?> addPermissionsToRoles(Long id_Roles, Long id_Permissions){
+//		Role role = roleRepo.getRoleById(id_Roles);
+//		Permissions permission = permissionRepo.getPermissionsById(id_Permissions);
+//		try {
+//			ressService.PrermissionsToRoles(id_Roles, id_Permissions);
+//			return  new ResponseEntity("la permission ' "+permission.getNamepermission()+" ' est affecter a un role ' "+role.getName()+" '", HttpStatus.CREATED);
+//		} catch (Exception e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//			return new ResponseEntity(e.getMessage(),HttpStatus.BAD_REQUEST);
+//		}
+//	}
+//
+//	@RequestMapping(value = "/permissions/RemovePermissionsToRole",method = RequestMethod.POST)
+//	public ResponseEntity<?> RemovePermissionToRole(Long id_Roles, Long id_Permissions){
+//		Role role = roleRepo.getRoleById(id_Roles);
+//		Permissions permission = permissionRepo.getPermissionsById(id_Permissions);
+//		
+//		try {
+//			ressService.RemovePermissionToRole(id_Roles, id_Permissions);
+//			return  new ResponseEntity("la permission ' "+permission.getNamepermission()+" ' est disactiver pour le role  ' "+role.getName()+" '", HttpStatus.ACCEPTED);
+//			
+//		} catch (Exception e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//			return new ResponseEntity(e.getMessage(),HttpStatus.BAD_REQUEST);
+//		
+//		}
+//	}
 
 
 	@GetMapping("/ressources")

@@ -20,5 +20,7 @@ public interface PermissionRepo extends JpaRepository<Permissions, Long>{
 	@Query(value = "SELECT * FROM permissions per WHERE per.privileges_id=?1 AND per.ressources_id=?2",nativeQuery = true )
 	public List<Permissions> permissionWhereId(Long id_Privileges, Long id_Ressource);
 
+	@Query(value = "@Query(value = \"SELECT * FROM permissions per WHERE per.privileges_id=?1 AND per.ressources_id=?2\",nativeQuery = true ",nativeQuery = true )
+	public List<Permissions> roleHasNotPermissions(long id_Role);
 	
 }
