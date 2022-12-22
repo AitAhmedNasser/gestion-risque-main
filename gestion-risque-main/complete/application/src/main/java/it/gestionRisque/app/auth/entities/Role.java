@@ -52,22 +52,14 @@ public class Role implements Serializable{
 	@Column(name = "name")
 	private String name;
 	
-	@ManyToOne()
-	private Niveau niveaux;
+	@OneToMany(mappedBy = "roles")
+	private List<Niveau> niveaux = new ArrayList<>();
 
-		@OneToMany(mappedBy = "roles",cascade = CascadeType.ALL)
+		@OneToMany(mappedBy = "roles")
 		@JsonIgnore
 		private List<User> users = new ArrayList<>();
 		
-		@ManyToMany
-		    @JoinTable(
-		        name = "roles_permissions",
-		        joinColumns = {
-		            @JoinColumn(name = "role_id")
-		        },
-		        inverseJoinColumns = {
-		            @JoinColumn(name = "permission_id")
-		        }
-		    )
-		    Set < Permissions > permissions = new HashSet < Permissions > ();
+		@ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+		 private Set<Permissions> permissions = new HashSet<Permissions>();
+		
 }
