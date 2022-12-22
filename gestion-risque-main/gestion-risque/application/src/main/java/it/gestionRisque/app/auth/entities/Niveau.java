@@ -1,7 +1,11 @@
 //package Auth.entities;
 package it.gestionRisque.app.auth.entities;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import javax.annotation.Generated;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
@@ -10,6 +14,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.MapsId;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -21,7 +26,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Entity
-@Table
+@Table(name="niveau")
 @Data
 @Getter
 @Setter
@@ -39,9 +44,12 @@ public class Niveau {
 	@Column(name = "Niveau")
 	private Integer niveauNumber;
 	
-	@ManyToOne()
+
+	
+	@OneToMany(mappedBy = "niveaux",cascade = CascadeType.ALL)
 	@JsonIgnore
-	private Role roles;
-	
-	
+	private List<Role> roles = new ArrayList<>();
+
+
+
 }

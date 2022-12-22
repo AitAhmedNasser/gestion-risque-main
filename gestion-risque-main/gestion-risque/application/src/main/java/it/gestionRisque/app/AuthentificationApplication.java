@@ -30,6 +30,7 @@ public class AuthentificationApplication {
 		SpringApplication.run(AuthentificationApplication.class, args);
 	}
 	
+	
 	@Bean
 	PasswordEncoder passwordEncoder() {
 		return new BCryptPasswordEncoder();
@@ -43,28 +44,34 @@ public class AuthentificationApplication {
 	CommandLineRunner start(AccountService accountService, RessourceService ressourceService, RepositoryRestConfiguration restConfiguration) {
 		restConfiguration.exposeIdsFor(AuthentificationApplication.class);
 		return args->{
+			
+	// creer un niveau 
+			
+			Niveau Niv_1 = accountService.AddNiveau(new Niveau(null, "niveau1",1,new ArrayList<>()));
+			Niveau Niv_2 = accountService.AddNiveau(new Niveau(null, "niveau2",2,new ArrayList<>()));
+			
+			
+			
 			//	Create Role 
 			
-			Role role1=accountService.addNewRolle(new Role(null, "Admin",  new ArrayList<>(), new ArrayList<>(),new HashSet()));
-			Role role2=accountService.addNewRolle(new Role(null, "Utilisateur",  new ArrayList<>(),new ArrayList<>(),new HashSet()));
-			Role role3=accountService.addNewRolle(new Role(null, "Manager Risque ", new ArrayList<>(),new ArrayList<>(),new HashSet()));
+			Role role1=accountService.addNewRolle(new Role(null, "Admin",  Niv_1, new ArrayList<>(),new HashSet()));
+			Role role2=accountService.addNewRolle(new Role(null, "Utilisateur", Niv_1,new ArrayList<>(),new HashSet()));
+			Role role3=accountService.addNewRolle(new Role(null, "Manager Risque ", Niv_1,new ArrayList<>(),new HashSet()));
 
 			//Create agence
 			Agence agence1 =  accountService.AddAgence(new Agence(null, "BNA", "l'agence de BNA", new ArrayList<>()));
+			Agence agence2 =  accountService.AddAgence(new Agence(null, "BA", "l'agence de BA", new ArrayList<>()));
+			Agence agence3 =  accountService.AddAgence(new Agence(null, "Housing", "l'agence 3", new ArrayList<>()));
 			
 			//	Create User
 			User user1=	accountService.addNewUser(new User(null,"Admin" ,"Admin" ,"Admin","admin@Risque.com","Admin1234",role1,agence1));
 			
-			User user2 =accountService.addNewUser(new User(null,"Lyes","Lehara","LyesLehara","ManagerRisque@Risque.com","User4",role2,null));
+			User user2 =accountService.addNewUser(new User(null,"Lyes","Lehara","LyesLehara","ManagerRisque@Risque.com","User4",role2,agence3));
 						
-			// creer un niveau 
-			
-			Niveau Niv_1 = accountService.AddNiveau(new Niveau(null, "niveau1",1,role1));
-			Niveau Niv_2 = accountService.AddNiveau(new Niveau(null, "niveau2",2,role1));
-			
+		
 			//creer agence 
 			
-			
+		
 			
 			//	Create Privileges 
 			
@@ -92,8 +99,9 @@ public class AuthentificationApplication {
 			Permissions per3 = ressourceService.createPermissions(new Permissions(p5,r1,p5.getNameP()+r1.getName()));
 			Permissions per4 = ressourceService.createPermissions(new Permissions(p6,r2,p6.getNameP()+r2.getName()));
 			
-			
 			Permissions per5 = ressourceService.createPermissions(new Permissions(p2,r5,p2.getNameP()+r5.getName()));
+			Permissions per6 = ressourceService.createPermissions(new Permissions(p4,r1,p4.getNameP()+r1.getName()));
+			Permissions per7 = ressourceService.createPermissions(new Permissions(p3,r1,p3.getNameP()+r1.getName()));
 			
 			//Add Permission to roles 
 			
@@ -103,7 +111,7 @@ public class AuthentificationApplication {
 			ressourceService.PrermissionsToRoles(role1.getId(), per3.getId());
 			ressourceService.PrermissionsToRoles(role2.getId(), per1.getId());
 			
-			ressourceService.PrermissionsToRoles(role1.getId(), per5.getId());
+			ressourceService.PrermissionsToRoles(role3.getId(), per5.getId());
 	
 		};
 	}
