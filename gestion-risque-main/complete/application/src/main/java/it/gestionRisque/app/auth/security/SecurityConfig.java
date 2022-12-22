@@ -13,9 +13,7 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.reactive.UrlBasedCorsConfigurationSource;
@@ -33,7 +31,7 @@ import it.gestionRisque.app.auth.service.ServiceImp.UserDetailsServiceImp;
 		jsr250Enabled = true,
 		prePostEnabled = true)
 
-public class SecurityConfig  {
+public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
 private final PasswordEncoder passwordEncoder;
 
@@ -54,36 +52,46 @@ public SecurityConfig(PasswordEncoder passwordEncoder,UserDetailsService userDet
 		return new AuthTockenFilter();
 	}
 
-	@Bean
-	public AuthenticationManager authManager(HttpSecurity http, BCryptPasswordEncoder bCryptPasswordEncoder, UserDetailsService userDetailService) 
-	  throws Exception {
-	    return http.getSharedObject(AuthenticationManagerBuilder.class)
-	      .userDetailsService(userDetailsService)
-	      .passwordEncoder(bCryptPasswordEncoder)
-	      .and()
-	      .build();
+	
+	
+	@Override
+	protected void configure(AuthenticationManagerBuilder auth) throws Exception {
+		// TODO Auto-generated method stub
+		auth.userDetailsService(userDetailsService).passwordEncoder(passwordEncoder);
+		
+	
 	}
 
+	@Override
+	protected void configure(HttpSecurity http) throws Exception {
 
-	@Bean
-	public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-	    http.cors().and()
-	    .csrf()
-	    .disable()
-	      .exceptionHandling().authenticationEntryPoint(unauthorizedHandler).and()
-			.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
-			 .authorizeRequests(authorizeRequests ->
-			authorizeRequests
-			.antMatchers("/api/**").hasAnyAuthority("ConsulterUser")
+		http.cors().and().csrf().disable()
+		.exceptionHandling().authenticationEntryPoint(unauthorizedHandler).and()
+		.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
+		 .authorizeRequests(authorizeRequests ->
+	        authorizeRequests
+	            .antMatchers("/api/user").hasAnyAuthority("ConsulterUser")
+	            .antMatchers("/api/roles").hasAnyAuthority("ConsulterRole")
+	            .antMatchers("/api/ressources").hasAnyAuthority("ConsulterRessources")
+	            .antMatchers("/creditParticulier/**").hasAnyAuthority("ConsulterUser")
+	    )
 
+		.authorizeRequests().antMatchers("/Auth/signin","api/Ressources/","api/privileges","/creditParticulier/**").permitAll()
+		.anyRequest().permitAll();
 
-)
-.authorizeRequests().antMatchers("/Auth/**").permitAll()
-.anyRequest().permitAll();
-	    http.addFilterBefore(authenticationJwtTokenFilter(), UsernamePasswordAuthenticationFilter.class);
+	http.addFilterBefore(authenticationJwtTokenFilter(), UsernamePasswordAuthenticationFilter.class);
 
-	    return http.build();
 	}
 
+	@Bean
+	@Override
+	public AuthenticationManager authenticationManagerBean() throws Exception {
+		// TODO Auto-generated method stub
+		return super.authenticationManagerBean();
+	}
+	
+
+
+	
 	
 }

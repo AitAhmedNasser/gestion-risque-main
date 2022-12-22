@@ -17,7 +17,6 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
-import javax.persistence.Table;
 
 import org.apache.poi.ss.usermodel.DateUtil;
 
@@ -25,8 +24,7 @@ import org.apache.poi.ss.usermodel.DateUtil;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-@Table(name= "ClientsTable")
-@Entity
+@Entity(name= "client")
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
