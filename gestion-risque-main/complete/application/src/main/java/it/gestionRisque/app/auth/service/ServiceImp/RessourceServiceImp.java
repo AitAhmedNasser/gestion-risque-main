@@ -2,10 +2,12 @@
 package  it.gestionRisque.app.auth.service.ServiceImp;
 
 import java.security.Permission;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import javax.transaction.Transactional;
 
@@ -84,33 +86,7 @@ public class RessourceServiceImp implements RessourceService {
 		return PermRepo.findAll();
 	}
 
-	@Override
-	public Permissions addPermissions(Long id_Privileges, Long id_Ressources) throws Exception {
-		// TODO Auto-generated method stub
-		Privilege previlege = privilegeRepo.findById(id_Privileges).get();
-		Ressource ressource = ressourcesRepo.findById(id_Ressources).get();
 
-		List<Permissions> Listper = PermRepo.permissionWhereId(id_Privileges, id_Ressources);
-
-		if (previlege == null || ressource == null) {
-			throw new RuntimeException("le privilege ou la resssource n'existe pas ");
-
-		} else {
-
-			Listper.forEach(p -> {
-				if ((p.getPrivileges().getId() == id_Privileges) && (p.getRessources().getId() == id_Ressources)) {
-
-					throw new RuntimeException("la Permission existe deja dans la base de données");
-
-				}
-			});
-			Permissions Permissions = new Permissions(previlege, ressource,
-					previlege.getNameP().toString() + ressource.getName().toString());
-
-			return PermRepo.save(Permissions);
-		}
-
-	}
 
 	@Override
 	public Permissions createPermissions(Permissions permission) throws RuntimeException {
@@ -140,18 +116,21 @@ public class RessourceServiceImp implements RessourceService {
 		}
 
 	}
+	
 
 	@Override
 	public void PrermissionsToRoles(Long id_Roles, Long id_Permissions) throws Exception {
 		// TODO Auto-generated method stub
-		Role role = roleRepo.getRoleById(id_Roles);
-		Permissions permissions = PermRepo.getPermissionsById(id_Permissions);
 
-		if (role == null || permissions == null) {
+		
+		Role role = roleRepo.getRoleById(id_Roles);
+		Permissions permission = PermRepo.getPermissionsById(id_Permissions);
+
+		if (role == null || permission == null) {
 			throw new Exception("role ou permission n'existe pas");
 		} else {
 
-			role.getPermissions().add(permissions);
+			role.getPermissions().add(permission);
 		}
 
 	}
@@ -169,26 +148,6 @@ public class RessourceServiceImp implements RessourceService {
 		}
 	}
 
-	@Override
-	public void RemovePermissionToRole(Long id_Roles, Long id_Permissions) throws Exception {
-		// TODO Auto-generated method stub
-		Role role = roleRepo.getRoleById(id_Roles);
-		Permissions permissions = PermRepo.getPermissionsById(id_Permissions);
-
-		Map<Long, Long> ListPerm = roleRepo.roleHasPermission(id_Roles, id_Permissions);
-
-		if (role == null || permissions == null) {
-			throw new Exception("role ou permission n'existe pas");
-
-		} else {
-
-			if (this.roleHasPermission(id_Roles, id_Permissions)) {
-				throw new Exception("Ce role ne contient pas cette permission");
-			}
-			role.getPermissions().remove(permissions);
-		}
-
-	}
 
 	@Override
 	public Permissions UpdatePermission(Long id_Permission, Permissions permission) throws Exception {

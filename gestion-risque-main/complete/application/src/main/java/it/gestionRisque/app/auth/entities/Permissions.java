@@ -3,9 +3,12 @@ package it.gestionRisque.app.auth.entities;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import javax.annotation.Generated;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -28,7 +31,8 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Entity
-@Table
+@Table(name = "Permissions")
+@Data 
 public class Permissions implements Serializable {
 
 
@@ -88,6 +92,9 @@ public class Permissions implements Serializable {
 	 @ManyToOne
 	 private Ressource ressources; 
 
+////	 @ManyToMany(mappedBy = "permissions", cascade = { CascadeType.ALL })
+////	    private Set<Role> roles = new HashSet<Role>();
+//	 
 	 @Column(name = "Permission_Name")
 	 @JsonProperty( access = Access.READ_ONLY)
 	 private String namepermission;

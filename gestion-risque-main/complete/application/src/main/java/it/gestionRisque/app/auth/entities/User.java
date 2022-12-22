@@ -74,7 +74,7 @@ public class User implements Serializable {
 	@JsonProperty(access = Access.WRITE_ONLY)
 	private String password;
 
-	@ManyToOne
+	@ManyToOne()
 	private Role roles;
 
 	@ManyToOne()
