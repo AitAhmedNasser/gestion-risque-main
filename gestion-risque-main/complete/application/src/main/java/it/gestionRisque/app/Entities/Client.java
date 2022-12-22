@@ -17,7 +17,6 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
-import javax.persistence.Table;
 
 import org.apache.poi.ss.usermodel.DateUtil;
 
@@ -25,8 +24,7 @@ import org.apache.poi.ss.usermodel.DateUtil;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-@Table(name= "ClientsTable")
-@Entity
+@Entity(name= "client")
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
@@ -51,16 +49,16 @@ private Integer entitieCode;
 @Column(name = "borrowerType")
 private String  borrowerType;
 
-@Column()
+@Column(name = "ID_GROUPE")
 private String groupId;
 
-@Column()
+@Column(name = "NOM_GROUPE")
 private String groupName;
 
-@Column()
+@Column(name = "ID_AGENCE")
 private String solId;
 
-@Column()
+@Column(name = "NOM_AGENCE")
 private String solDescription;
 
 @Column(name = "CLASS_PRINCIPALE_CLIENT")

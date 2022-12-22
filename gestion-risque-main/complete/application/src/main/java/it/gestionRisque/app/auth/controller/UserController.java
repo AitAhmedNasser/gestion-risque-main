@@ -1,18 +1,8 @@
 //package Auth.Controller;
 package it.gestionRisque.app.auth.controller;
 
-import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
-import java.util.Set;
-import java.util.UUID;
-import java.util.stream.Collectors;
-
-import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -30,19 +20,10 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import it.gestionRisque.app.auth.repository.AgenceRepository;
-import it.gestionRisque.app.auth.repository.PermissionRepo;
 import it.gestionRisque.app.auth.repository.RoleRepository;
 import it.gestionRisque.app.auth.repository.UserRepository;
-import it.gestionRisque.app.auth.repository.niveauRepository;
 import it.gestionRisque.app.auth.service.AccountService;
-import it.gestionRisque.app.auth.service.MailService;
-import it.gestionRisque.app.auth.service.ResetPasswordToken;
-import it.gestionRisque.app.auth.service.RessourceService;
 import it.gestionRisque.app.auth.entities.Agence;
-import it.gestionRisque.app.auth.entities.Mail;
-import it.gestionRisque.app.auth.entities.Niveau;
-import it.gestionRisque.app.auth.entities.PasswordResetToken;
-import it.gestionRisque.app.auth.entities.Permissions;
 import it.gestionRisque.app.auth.entities.Role;
 import it.gestionRisque.app.auth.entities.User;
 import lombok.RequiredArgsConstructor;
@@ -56,10 +37,6 @@ public class UserController {
 
 	@Autowired
 	private AccountService accountService ;
-
-	@Autowired
-	private RessourceService ressourcesservices ;
-	
 	
 	@Autowired
 	private UserRepository userRepo;
@@ -68,43 +45,15 @@ public class UserController {
 	private RoleRepository roleRepo;
 	
 	@Autowired
-	private PermissionRepo permissionRepo;
-	
-	@Autowired
-	private niveauRepository Nivrepo;
-	@Autowired
 	private AgenceRepository ageneceRepo;
-	@Autowired
-	private ResetPasswordToken restpasswordTokenSer;
-	@Autowired
-	private MailService mailService;
+	
 	
 	@GetMapping("/user")
-//	@PreAuthorize("hasAuthority('ConsulterUser')")
 	public ResponseEntity<List<User>> getUsers(){
 		try {
 			List<User> user = accountService.ListUsers();
 			if (user.isEmpty()) {
 		        return new ResponseEntity("Liste Users est null",HttpStatus.NO_CONTENT);
-		      }else {
-			
-			return new ResponseEntity(user, HttpStatus.ACCEPTED);
-		      }
-			
-		} catch (Exception e) {
-			// TODO: handle exception
-			 return new ResponseEntity(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
-		}
-			
-	}
-	
-	@GetMapping("/user/{id_user}")
-
-	public ResponseEntity<User> getUserById(@PathVariable Long id_user){
-		try {
-			User user = accountService.getUserById(id_user);
-			if (user == null) {
-		        return new ResponseEntity("L'Utilisateur n'existe pas",HttpStatus.NO_CONTENT);
 		      }else {
 			
 			return new ResponseEntity(user, HttpStatus.ACCEPTED);
@@ -134,189 +83,40 @@ public class UserController {
 	}
 			
 	}
-
-@GetMapping("/role/{id_role}")
-
-public ResponseEntity<Role> getRoleById(@PathVariable Long id_role){
-	try {
-		Role role = accountService.getRoleById(id_role);
-		if (role == null) {
-	        return new ResponseEntity("Le role n'existe pas",HttpStatus.NO_CONTENT);
-	      }else {
-		
-		return new ResponseEntity(role, HttpStatus.ACCEPTED);
-	      }
-		
-	} catch (Exception e) {
-		// TODO: handle exception
-		 return new ResponseEntity(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
-	}
-		
-}
-@GetMapping("/agence/{id_agence}")
-
-public ResponseEntity<Agence> getAgenceById(@PathVariable Long id_agence){
-	try {
-		Agence agence = accountService.getAgenceByID(id_agence);
-		if (agence == null) {
-	        return new ResponseEntity("L'agence n'existe pas",HttpStatus.NO_CONTENT);
-	      }else {
-		
-		return new ResponseEntity(agence, HttpStatus.ACCEPTED);
-	      }
-		
-	} catch (Exception e) {
-		// TODO: handle exception
-		 return new ResponseEntity(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
-	}
-		
-}
-@GetMapping("/niveau/{id_niv}")
-
-public ResponseEntity<Niveau> getNiveauById(@PathVariable Long id_niv){
-	try {
-		Niveau niveau = accountService.getNiveauById(id_niv);
-		if (niveau == null) {
-	        return new ResponseEntity("Le niveau n'existe pas",HttpStatus.NO_CONTENT);
-	      }else {
-		
-		return new ResponseEntity(niveau, HttpStatus.ACCEPTED);
-	      }
-		
-	} catch (Exception e) {
-		// TODO: handle exception
-		 return new ResponseEntity(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
-	}
-		
-}
 	
-@GetMapping("/niveaux")
-
-public ResponseEntity<Niveau> getAllNiveaux(){
-	try {
-		List<Niveau> niveau = accountService.AllNiveau();
-		if (niveau == null) {
-	        return new ResponseEntity("Le niveau n'existe pas",HttpStatus.NO_CONTENT);
-	      }else {
-		
-		return new ResponseEntity(niveau, HttpStatus.ACCEPTED);
-	      }
-		
-	} catch (Exception e) {
-		// TODO: handle exception
-		 return new ResponseEntity(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
-	}
-		
-}
-
-
-
-	 @RequestMapping(value = "/users/save", method = RequestMethod.POST)
-	public ResponseEntity<User> saveUser(HttpServletRequest request,@RequestBody User user){
+	 @PostMapping("/users/save")
+	public ResponseEntity<User> saveUser(@RequestBody User user){
 		 try {
-			User userData = accountService.getUser(user.getUsername());
-			if(userData !=null) {
-				return  new ResponseEntity("l'Utilisateur avec cette username existe déja ", HttpStatus.CREATED);
-			}
 				accountService.addNewUser(user);
-				String token = UUID.randomUUID().toString();
-				PasswordResetToken passwordResetToken = new PasswordResetToken();
-				passwordResetToken.setToken(token);
-				passwordResetToken.setUser(user);
-				passwordResetToken.setExpiryDate(LocalDateTime.now().plusHours(1));
-				restpasswordTokenSer.savePasswordResetToken(passwordResetToken);
-				
-				  Mail mail = new Mail();
-			        mail.setFrom("Intervalle-Technologies.com");
-			        mail.setTo(user.getEmail());
-			        mail.setSubject("Reset your password");
-
-			        Map<String, Object> model = new HashMap<>();
-			        model.put("token", token);
-			        model.put("Username", user.getUsername());
-			        model.put("Email", user.getEmail());
-			        model.put("expiryDate", passwordResetToken.getExpiryDate());
-			        
-			        String url = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort();
-			        String resetPasswordLink = "http://localhost:4200/ResetPassword/" + passwordResetToken.getToken();
-				       
-			        
-			        model.put("Link", resetPasswordLink);
-			       
-			        mail.setModel(model);
-			        mailService.send(mail);
 				return  new ResponseEntity(user, HttpStatus.CREATED);
 			} catch (Exception e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
-				return  new ResponseEntity("les champs ne doit pas etre null", HttpStatus.BAD_REQUEST);
+				return  new ResponseEntity(e.getMessage(), HttpStatus.BAD_REQUEST);
 			}
 	}
 	
 	@PostMapping("/roles/save")
 	public ResponseEntity<Role> saveRoles(@RequestBody Role role){
 		 try {
-				Role roole = accountService.addNewRolle(role);
-				return  new ResponseEntity(roole, HttpStatus.CREATED);
-			} catch (Exception e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-				return  new ResponseEntity("le role ne doit pas etre null ", HttpStatus.BAD_REQUEST);
-			}
-	}
-	
-	@PostMapping("/roles/saveRole")
-	public ResponseEntity<Role> createRole(@RequestBody Role roole){
-	
-		 try {
-				Role role = accountService.createRole(roole);
+				accountService.addNewRolle(role);
 				return  new ResponseEntity(role, HttpStatus.CREATED);
 			} catch (Exception e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
-				return  new ResponseEntity("le role ne doit pas etre null ", HttpStatus.BAD_REQUEST);
-			}
-	        
-		 }
-			
-		
-	
-	
-	@PostMapping("/Agence/addAgence")
-	public ResponseEntity<Agence>  AddAgence(@RequestBody Agence agence) throws Exception{
-		
-		
-		
-		 try {
-			 if(agence == null) {
-				 return  new ResponseEntity("l'agence ne doit pas etre null   ", HttpStatus.BAD_REQUEST); 
-			 }else{
-				Agence Agence =accountService.AddAgence(agence);
-				return  new ResponseEntity(Agence, HttpStatus.CREATED);
-			 }
-			} catch (Exception e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-				return  new ResponseEntity("l'agence existe deja  ", HttpStatus.BAD_REQUEST);
+				return  new ResponseEntity(e.getMessage(), HttpStatus.BAD_REQUEST);
 			}
 	}
 	
-	@PostMapping("/niveau/addNiveau")
-	public ResponseEntity<Niveau>  AddNiveau(@RequestBody Niveau niveau) throws Exception{
-		
-		
-		
+	@PostMapping("/Agence/addAgence")
+	public ResponseEntity<Agence>  AddAgence(@RequestBody Agence agence) throws Exception{
 		 try {
-			 if(niveau == null) {
-				 return  new ResponseEntity("le niveau ne doit pas etre null   ", HttpStatus.BAD_REQUEST); 
-			 }else{
-				accountService.AddNiveau(niveau);
-				return  new ResponseEntity(niveau, HttpStatus.CREATED);
-			 }
+				accountService.AddAgence(agence);
+				return  new ResponseEntity(agence, HttpStatus.CREATED);
 			} catch (Exception e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
-				return  new ResponseEntity("l'agence existe deja  ", HttpStatus.BAD_REQUEST);
+				return  new ResponseEntity(e.getMessage(), HttpStatus.BAD_REQUEST);
 			}
 	}
 	
@@ -340,6 +140,7 @@ public ResponseEntity<Niveau> getAllNiveaux(){
 	
 	
 	@PutMapping("/user/update/{id_user}")
+	@PreAuthorize("hasAnyAuthority('ConsulterRessources')")
 	public ResponseEntity<User> UpdateUser(@PathVariable Long id_user, @RequestBody User user ){
 	try {
 		
@@ -358,14 +159,13 @@ public ResponseEntity<Niveau> getAllNiveaux(){
 	
 }
 	@PutMapping("/role/update/{id_role}")
-	public ResponseEntity<?> UpdateRole(@PathVariable(name="id_role") Long id_role, @RequestBody Role role ){
+	public ResponseEntity<User> UpdateUser(@PathVariable Long id_role, @RequestBody Role role ){
 	try {
 		
 		Optional<Role> RoleData = roleRepo.findById(id_role);
 		
 		if(RoleData.isPresent()) {
-			Role UpdatedRole = accountService.UpdateRole(id_role, role);
-			return  new ResponseEntity(UpdatedRole, HttpStatus.CREATED);
+			return  new ResponseEntity(accountService.UpdateRole(id_role, role), HttpStatus.CREATED);
 		}else {
 			 return new ResponseEntity("le role n'existe pas ",HttpStatus.NOT_FOUND);
 		}
@@ -384,29 +184,9 @@ public ResponseEntity<Niveau> getAllNiveaux(){
 		Optional<Agence> AgenceData = ageneceRepo.findById(id_agence);
 		
 		if(AgenceData.isPresent()) {
-			
 			return  new ResponseEntity(accountService.UpdateAgence(id_agence, agence), HttpStatus.CREATED);
 		}else {
 			 return new ResponseEntity("cette Agence n'existe pas ",HttpStatus.NOT_FOUND);
-		}
-		
-	} catch (Exception e) {
-		e.printStackTrace();
-		return new ResponseEntity(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
-	}
-	
-}
-	
-	@PutMapping("/niveau/update/{id_niveau}")
-	public ResponseEntity<Niveau> UpdateNiveau(@PathVariable Long id_niveau, @RequestBody Niveau Niveau ){
-	try {
-		
-		Niveau NiveauData = accountService.getNiveauById(id_niveau);
-		
-		if(NiveauData != null) {
-			return  new ResponseEntity(accountService.UpdateNiveau(id_niveau, Niveau), HttpStatus.CREATED);
-		}else {
-			 return new ResponseEntity("ce Niveau n'existe pas ",HttpStatus.NOT_FOUND);
 		}
 		
 	} catch (Exception e) {
@@ -450,18 +230,6 @@ public ResponseEntity<Niveau> getAllNiveaux(){
 			e.printStackTrace();
 			return new ResponseEntity(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
 		}
-	}
-	
-	@DeleteMapping("/niveau/delete/{niveau_id}")
-	public ResponseEntity<?> DeleteNiveau(@PathVariable Long niveau_id){
-		 try {
-				accountService.DeleteNiveau(niveau_id);
-				return new ResponseEntity("niveau Deleted", HttpStatus.NO_CONTENT);
-			} catch (Exception e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-				return new ResponseEntity(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
-			}
 	}
 	
 }
