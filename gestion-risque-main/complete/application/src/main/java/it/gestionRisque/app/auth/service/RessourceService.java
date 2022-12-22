@@ -4,7 +4,6 @@ package  it.gestionRisque.app.auth.service;
 import java.security.Permission;
 import java.util.List;
 import java.util.Optional;
-import java.util.Set;
 
 import org.springframework.stereotype.Service;
 
@@ -22,6 +21,7 @@ public interface RessourceService {
 	List<Privilege> AllPrivilege();
 	
 	void PrermissionsToRoles(Long id_Roles, Long id_Permissions) throws Exception;
+	void RemovePermissionToRole(Long id_Roles, Long id_Permissions)throws Exception;
 	
 	
 	Ressource CreateRessource(Ressource ressource) throws Exception;
@@ -29,6 +29,7 @@ public interface RessourceService {
 	
 	
 	Permissions createPermissions(Permissions per) throws Exception;
+	Permissions addPermissions(Long id_Privileges,Long id_Ressources) throws Exception;
 	List<Permissions> AllPermissions();
 	void DeletePermission(Long id_permission) throws Exception;
 	Permissions UpdatePermission(Long id_Permission,Permissions permission) throws Exception;
