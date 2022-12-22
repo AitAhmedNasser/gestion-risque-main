@@ -52,11 +52,10 @@ public class JwtUtils {
 		Algorithm algorithm = Algorithm.HMAC256("secret12309");
 		return JWT.create()
 				.withSubject(userPrincipal.getUsername())
-				.withExpiresAt(new Date(System.currentTimeMillis()+  60* 60 * 1000))
+				.withExpiresAt(new Date(System.currentTimeMillis()+  360 *60 * 1000))
 				.withClaim("roles", userPrincipal.getAuthorities().stream().map(ga->ga.getAuthority()).collect(Collectors.toList()))
 				.sign(algorithm);
-			
-
+	
 	}
 	
 
