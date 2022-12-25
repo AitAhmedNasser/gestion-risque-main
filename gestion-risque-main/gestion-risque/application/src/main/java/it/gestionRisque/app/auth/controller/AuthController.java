@@ -96,164 +96,146 @@ public class AuthController {
 
 	@Autowired
 	JwtUtils jwtUtils;
-	
+
 	@Autowired
 	UserDetailsImp userDetailsImp;
-	
 
 	@Autowired
 	ResetPasswordToken restTokenSer;
-	
+
 	@Autowired
 	MailService mailService;
-	
+
 	@Autowired
 	RestPasswordTokenRepository ResetPasswordRepository;
-	
+
 	@Autowired
 	AccountService accountService;
 
-	
 	@PostMapping("/signin")
-	
+
 	public ResponseEntity<JwtResponse> authenticateUser(@Valid @RequestBody AuthRequest authRequest) throws Exception {
 
 		try {
-			User usr = userRepository.getUserByUsername(authRequest.getUsername()); 
-			if(usr.getUsername() == null || usr.getPassword() == null) {
-			
+			User usr = userRepository.getUserByUsername(authRequest.getUsername());
+			if (usr.getUsername() == null || usr.getPassword() == null) {
+
 				return new ResponseEntity(" not found ", HttpStatus.NOT_FOUND);
-			}else {
-				
-		
+			} else {
+
 				Authentication authentication = authenticationManager.authenticate(
 						new UsernamePasswordAuthenticationToken(authRequest.getUsername(), authRequest.getPassword()));
 				log.info(authRequest.getUsername());
 				SecurityContextHolder.getContext().setAuthentication(authentication);
 				String jwtAccessTocken = jwtUtils.generateJwtAccessToken(authentication);
-				UserDetailsImp userDetails = (UserDetailsImp) authentication.getPrincipal();		
+				UserDetailsImp userDetails = (UserDetailsImp) authentication.getPrincipal();
 				System.out.println(userDetails.getAuthorities());
 
-				List<String> permissions = userDetails.getAuthorities().stream()
-						.map(item -> item.getAuthority())
+				List<String> permissions = userDetails.getAuthorities().stream().map(item -> item.getAuthority())
 						.collect(Collectors.toList());
-				
-				
-				
-				return  ResponseEntity.ok(new JwtResponse(jwtAccessTocken,userDetails.getRoles(),userDetails.getNom(),userDetails.getPrenom(),userDetails.getEmail(),permissions));
-				}
+
+				return ResponseEntity.ok(new JwtResponse(jwtAccessTocken, userDetails.getRoles(), userDetails.getNom(),
+						userDetails.getPrenom(), userDetails.getEmail(), permissions));
+			}
 		} catch (Exception e) {
 			// TODO: handle exception
 			e.printStackTrace();
 			return new ResponseEntity("Username ou mot de passe incorrect", HttpStatus.BAD_REQUEST);
 		}
-	
-			}
 
-		
-}
-
+	}
 
 	@PostMapping("/ForgotPassword")
-	public ResponseEntity<GenericResponsePasswordReset> ForgotPassword(HttpServletRequest request,@RequestBody PasswordForgot passwordForgot, Model modelFarmework	) throws AccountNotFoundException{
-	
+	public ResponseEntity<GenericResponsePasswordReset> ForgotPassword(HttpServletRequest request,
+			@RequestBody PasswordForgot passwordForgot, Model modelFarmework) throws AccountNotFoundException {
+
 		User user = userRepository.getUserByEmail(passwordForgot.getEmail());
 
-		 
-		if(user == null) {
+		if (user == null) {
 			throw new AccountNotFoundException("User not found");
 		}
-		
+
 		String token = UUID.randomUUID().toString();
 		PasswordResetToken passwordResetToken = new PasswordResetToken();
 		passwordResetToken.setToken(token);
 		passwordResetToken.setUser(user);
 		passwordResetToken.setExpiryDate(LocalDateTime.now().plusHours(1));
 		restTokenSer.savePasswordResetToken(passwordResetToken);
-		
-		  Mail mail = new Mail();
-	        mail.setFrom("Intervalle-Technologies.com");
-	        mail.setTo(user.getEmail());
-	        mail.setSubject("Reset your password");
 
-	        Map<String, Object> model = new HashMap<>();
-	        model.put("token", token);
-	        model.put("Username", user.getUsername());
-	        model.put("Email", user.getEmail());
-	        model.put("expiryDate", passwordResetToken.getExpiryDate());
-	        
-	         String resetPasswordLink = "http://localhost:4200/ResetPassword/" + passwordResetToken.getToken();
-	       
-	        
-	        model.put("Link", resetPasswordLink);
-	       
-	        mail.setModel(model);
-	        mailService.send(mail);
-	        
-	        
-	return  ResponseEntity.ok(new GenericResponsePasswordReset("token est généré ",""));
-		
-		
-		
+		Mail mail = new Mail();
+		mail.setFrom("Intervalle-Technologies.com");
+		mail.setTo(user.getEmail());
+		mail.setSubject("Reset your password");
+
+		Map<String, Object> model = new HashMap<>();
+		model.put("token", token);
+		model.put("Username", user.getUsername());
+		model.put("Email", user.getEmail());
+		model.put("expiryDate", passwordResetToken.getExpiryDate());
+
+		String resetPasswordLink = "http://localhost:4200/ResetPassword/" + passwordResetToken.getToken();
+
+		model.put("Link", resetPasswordLink);
+
+		mail.setModel(model);
+		mailService.send(mail);
+
+		return ResponseEntity.ok(new GenericResponsePasswordReset("token est généré ", ""));
+
 	}
 //
-	
-	
+
 	@PostMapping("/ResetPassword/{token}")
-	public ResponseEntity<PasswordResetToken> ResetPassword(HttpServletRequest request,
-			@PathVariable String token, 
+	public ResponseEntity<PasswordResetToken> ResetPassword(HttpServletRequest request, @PathVariable String token,
 			@RequestBody PasswordReset passwordReset) throws AccountNotFoundException {
-		
+
 		PasswordResetToken resetToken = ResetPasswordRepository.findByToken(token);
-		
+
 		if (resetToken == null) {
 			return new ResponseEntity("Le token n'est pas générer !!!", HttpStatus.INTERNAL_SERVER_ERROR);
 		}
-		
+
 		if (restTokenSer.isTokenExpired(resetToken)) {
 			return new ResponseEntity("Le token est expiré", HttpStatus.INTERNAL_SERVER_ERROR);
 		}
-		
+
 		if (restTokenSer.isTokenUsed(resetToken) == true) {
 			return new ResponseEntity("Le token est utilisé déja ", HttpStatus.INTERNAL_SERVER_ERROR);
 		}
-		
+
 		User user = resetToken.getUser();
 
 		if (user == null) {
 			return new ResponseEntity("User not Found ", HttpStatus.INTERNAL_SERVER_ERROR);
 		}
-		
-		if (passwordReset.getPassword() == "" || passwordReset.getConfirmPassword() == "" 
-			|| passwordReset.getPassword() == null || passwordReset.getConfirmPassword() == null) {
-			return new ResponseEntity("Password and confirm Password required !  ",HttpStatus.INTERNAL_SERVER_ERROR);
+
+		if (passwordReset.getPassword() == "" || passwordReset.getConfirmPassword() == ""
+				|| passwordReset.getPassword() == null || passwordReset.getConfirmPassword() == null) {
+			return new ResponseEntity("Password and confirm Password required !  ", HttpStatus.INTERNAL_SERVER_ERROR);
 		}
-		
+
 		if (!passwordReset.getPassword().toString().equals(passwordReset.getConfirmPassword().toString())) {
-			return new ResponseEntity("Password and confirm Password must be identical !",HttpStatus.INTERNAL_SERVER_ERROR);
+			return new ResponseEntity("Password and confirm Password must be identical !",
+					HttpStatus.INTERNAL_SERVER_ERROR);
 		}
-		
 
 		String updatedPassword = passwordReset.getPassword();
 		accountService.UpdatePasswordUser(updatedPassword, user.getId());
 		resetToken.setUsed(true);
 		ResetPasswordRepository.save(resetToken);
-		
+
 		return new ResponseEntity(resetToken, HttpStatus.CREATED);
 	}
-	
+
 	@GetMapping("/CheckResetPassword/{token}")
-	public ResponseEntity<PasswordResetToken> CheckTokenPassword(@PathVariable String token){
+	public ResponseEntity<PasswordResetToken> CheckTokenPassword(@PathVariable String token) {
 		PasswordResetToken passwordReset = ResetPasswordRepository.checkUserToken(token);
-		
+
 		if (passwordReset == null) {
 			return new ResponseEntity(passwordReset, HttpStatus.NOT_FOUND);
 		}
 		return new ResponseEntity(passwordReset, HttpStatus.ACCEPTED);
 	}
-		
-	
-	//End of class
-	}
-	
 
+	// End of class
+}

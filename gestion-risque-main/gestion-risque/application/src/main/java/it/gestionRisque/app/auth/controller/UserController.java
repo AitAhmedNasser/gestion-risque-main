@@ -79,13 +79,6 @@ public class UserController {
 	@Autowired
 	private RoleRepository roleRepo;
 	
-	@Autowired
-
-	private AgenceRepository ageneceRepo;
-	
-	
-
-
 	private PermissionRepo permissionRepo;
 	
 	@Autowired
@@ -156,10 +149,7 @@ public class UserController {
 	}
 
 	
-	 @PostMapping("/users/save")
-	public ResponseEntity<User> saveUser(@RequestBody User user){
-		 try {
-				accountService.addNewUser(user);
+	
 
 
 @GetMapping("/role/{id_role}")
@@ -350,7 +340,7 @@ public ResponseEntity<Niveau> getAllNiveaux(){
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 				return  new ResponseEntity("l'agence existe deja  ", HttpStatus.BAD_REQUEST);
->>>>>>> my-branch-1
+
 			}
 	}
 	
