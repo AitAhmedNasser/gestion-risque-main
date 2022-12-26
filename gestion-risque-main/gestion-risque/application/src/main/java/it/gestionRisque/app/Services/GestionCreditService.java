@@ -1,21 +1,18 @@
 package it.gestionRisque.app.Services;
 
 import java.text.ParseException;
-import java.time.LocalDate;
-import java.util.Collection;
-import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.http.ResponseEntity;
 
-import ar.com.fdvs.dj.domain.Style;
 import it.gestionRisque.app.Entities.Client;
 import it.gestionRisque.app.Entities.Compte;
 import it.gestionRisque.app.Entities.Engagement;
-import it.gestionRisque.app.Repporting.AnalyseProtefeuilleIndirect;
+import it.gestionRisque.app.Entities.RapportType;
 import it.gestionRisque.app.Repporting.CreditEntreprise;
 import it.gestionRisque.app.Repporting.CreditParticulier;
-import net.sf.jasperreports.engine.JasperPrint;
+import it.gestionRisque.app.Repporting.PortefeuilleIndirect;
 
 
 
@@ -39,8 +36,11 @@ Engagement addToengagement(Engagement engagement);
 //compte
 Compte addTocompte(Compte compte);
 List<Compte>getAllcompte();
-AnalyseProtefeuilleIndirect addtPortefeuilleIndirect(String dateRepor);
-
-//report 
+List<String>  getAllRapport();
+PortefeuilleIndirect addtPortefeuilleIndirect(String codeRapport , String dateReport);
+Map<String,Double> addtPortefeuilleDirect(String codeRapport , String dateReport);
+List<String> getReportingDateBetween (String dateLast, Integer year);
+//add to Total Engagment 
+RapportType addToTotalEngagement (RapportType totalEng);
 
 }

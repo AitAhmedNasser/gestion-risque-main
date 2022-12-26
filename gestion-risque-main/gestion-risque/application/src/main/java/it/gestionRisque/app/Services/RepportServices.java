@@ -79,7 +79,7 @@ public class RepportServices {
 
 		JSONObject jsonObject = new JSONObject(json);		
 
-		System.out.println(" json   " +json);
+		
 		//get periode Object
 	    Periodes periode = mapper.readValue(jsonObject.get("periode").toString(),  Periodes.class);
 	    //get Key column Object
@@ -123,12 +123,8 @@ public class RepportServices {
 		list.add(jpRetail);
 		list.add(jpTotal);
 		
-		
-		
-	   
-	    SimpleOutputStreamExporterOutput outputStream = new SimpleOutputStreamExporterOutput("reporting2.pdf");
-
-		ByteArrayOutputStream pdfOutputStream = new ByteArrayOutputStream();
+		SimpleOutputStreamExporterOutput outputStream = new SimpleOutputStreamExporterOutput("reporting2.pdf");
+	   ByteArrayOutputStream pdfOutputStream = new ByteArrayOutputStream();
 		JRPdfExporter exporter = new JRPdfExporter();
 		exporter.setExporterInput(SimpleExporterInput.getInstance(list));
 		SimplePdfReportConfiguration configuration = new SimplePdfReportConfiguration();
@@ -140,17 +136,33 @@ public class RepportServices {
 		configuration.setIgnoreHyperlink(true);
 		configuration.setForceSvgShapes(true);
 	    exporter.setConfiguration(configuration);
+
 	    exporter.setExporterOutput(new SimpleOutputStreamExporterOutput(pdfOutputStream));
+
+	    //exporter.setExporterOutput(outputStream);
+
 	   
-	    
-        // exporter.setExporterOutput(outputStream);
+
 	    exporter.exportReport();
+	   
 	    byte[] data = pdfOutputStream.toByteArray();
+
 		
 	    pdfOutputStream.close();
 	    System.out.println("data<<<<<<<<<<"+data);
-		 HttpHeaders headers = new HttpHeaders();
+
+	    
+	    HttpHeaders headers = new HttpHeaders();      
+	    headers.add("Content-Disposition", "inline; filename=response.pdf");
+	    headers.setContentType(MediaType.parseMediaType("application/pdf"));
+	    return ResponseEntity.ok().headers(headers).body(data);
+	    
+	    //pdfOutputStream.close();
+		/*
+	    HttpHeaders headers = new HttpHeaders();
+>>>>>>> BackEnd-Portefeuil-indirect:gestion-risque-main/complete/application/src/main/java/it/gestionRisque/app/Services/RepportServices.java
 		  headers.set(HttpHeaders.CONTENT_DISPOSITION, "inline;filename=reporting.pdf");
 		return   ResponseEntity.ok().headers(headers).contentType(MediaType.APPLICATION_PDF).body(data);
+	*/
 	}
 }

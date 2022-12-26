@@ -3,21 +3,18 @@ package it.gestionRisque.app.Controller;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+
 import org.springframework.web.bind.annotation.RestController;
 
 import com.fasterxml.jackson.core.exc.StreamReadException;
@@ -26,8 +23,10 @@ import com.fasterxml.jackson.databind.DatabindException;
 import it.gestionRisque.app.Entities.Client;
 import it.gestionRisque.app.Entities.Compte;
 import it.gestionRisque.app.Entities.Engagement;
+import it.gestionRisque.app.Entities.RapportType;
 import it.gestionRisque.app.Repporting.CreditEntreprise;
 import it.gestionRisque.app.Repporting.CreditParticulier;
+import it.gestionRisque.app.Repporting.PortefeuilleIndirect;
 import it.gestionRisque.app.Services.GestionCreditService;
 import it.gestionRisque.app.Services.RepportServices;
 import lombok.AllArgsConstructor;
@@ -103,9 +102,31 @@ public class MainController {
 	}
 	
 	
-	@PostMapping(path="/pdf")
+	@PostMapping(path="/pdf", produces = MediaType.APPLICATION_PDF_VALUE)
 	public ResponseEntity<byte[]> getJob(@RequestBody String json) throws StreamReadException, DatabindException, MalformedURLException, IOException, JRException, ParseException {	   
-	return creditService.createReporting(json);
-  }
-
+		return creditService.createReporting(json);
+	}
+	
+	//portfeuille indirect
+	
+	  @GetMapping(path="/portfeuilleIndirect/{codeRapport}/{dateRepos}")
+	  public  PortefeuilleIndirect getTotalEngagement( @PathVariable String codeRapport ,@PathVariable("dateRepos")  String dateRepo ) {
+		  return gestionCreditservices.addtPortefeuilleIndirect(codeRapport,dateRepo);
+	  
+	  }
+	 
+	
+	@PostMapping("/addToTotal")
+	 public RapportType saveTotalEn(@RequestBody RapportType totalEng) {
+		return gestionCreditservices.addToTotalEngagement(totalEng);
+	}
+	 @GetMapping(path="/allRapportType")
+	public List<String> getAllRapport(){
+		return gestionCreditservices.getAllRapport();
+	}
+	 @GetMapping(path="/repportBetween/{dateRepo}/{year}")
+	 public List<String> getReportBeween(@PathVariable("dateRepo") String lastdate,@PathVariable("year")  Integer  year){
+		 return gestionCreditservices.getReportingDateBetween(lastdate, year);
+	 }
+	
 }
