@@ -2,6 +2,7 @@ package it.gestionRisque.app.auth.entities;
 import java.time.LocalDateTime;
 import java.util.Date;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
@@ -49,7 +50,7 @@ public class PasswordResetToken {
 	
     private String token;
     
-    @ManyToOne( fetch = FetchType.EAGER)
+    @ManyToOne()
     @JoinColumn(nullable = false, name = "user_id")
     private User user;
     
