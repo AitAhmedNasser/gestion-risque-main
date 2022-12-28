@@ -65,13 +65,7 @@ private final UploadUtil uploadUtil;
 					.map(cell ->{	
 						
 					
-						try {
-							System.out.println(cell.getArrayFormulaRange());
-							
-						} catch (Exception e) {
-							// TODO: handle exception
-							
-						}
+						
 						
 //						cell.setCellType(CellType.STRING);
 //						System.out.println(cell.getStringCellValue()+ " -> " + cell.getCellComment());

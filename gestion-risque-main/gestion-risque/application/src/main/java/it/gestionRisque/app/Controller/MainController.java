@@ -97,7 +97,7 @@ public class MainController {
 	public List<String> getAllDateRepo(@PathVariable("year")  Integer year){
 		List<String> mylist =gestionCreditservices.getClientByDateRepo(year); 
 	
-		System.out.println("date d " +mylist);
+		//System.out.println("date d " +mylist);
 		 return mylist;
 	}
 	

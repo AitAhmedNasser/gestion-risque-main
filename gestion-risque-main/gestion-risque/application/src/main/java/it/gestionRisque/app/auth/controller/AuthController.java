@@ -129,7 +129,7 @@ public class AuthController {
 				SecurityContextHolder.getContext().setAuthentication(authentication);
 				String jwtAccessTocken = jwtUtils.generateJwtAccessToken(authentication);
 				UserDetailsImp userDetails = (UserDetailsImp) authentication.getPrincipal();
-				System.out.println(userDetails.getAuthorities());
+				//System.out.println(userDetails.getAuthorities());
 
 				List<String> permissions = userDetails.getAuthorities().stream().map(item -> item.getAuthority())
 						.collect(Collectors.toList());
