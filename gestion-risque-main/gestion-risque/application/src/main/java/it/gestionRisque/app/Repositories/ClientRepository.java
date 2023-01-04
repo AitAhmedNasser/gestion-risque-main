@@ -31,17 +31,30 @@ Optional<Client> findByObligoreIdAndReportingDate (String obligoreId, String rep
 			+ "	EXTRACT(YEAR from client.reporting_date )<= :year group by client.reporting_date ",nativeQuery = true)
 	List<String> findBetweenTowDate(@Param("lastdatereport") String lastdatereport , @Param("year") Integer reportingDateyear);
 
-	@Query( value= "select a.desc_secteur, a.anneePrec, a.annee from(\r\n"
-			+ "SELECT count(id_client) annee, 0 anneePrec, desc_secteur FROM public.client\r\n"
+	@Query( value= "select b.desc_secteur,sum(b.anneePrec) anneePrec, sum(b.annee) annee from(\r\n"
+			+ "select (case\r\n"
+			+ "when a.code_secteur in ('4','3') then 'INDUSTRIES' \r\n"
+			+ "when a.code_secteur in ('9') then 'TRANSPORTS, ET COMMUNICATIONS'\r\n"
+			+ "when a.code_secteur in ('7') then 'REPARATION AUTOMOBILES ET D''ARTICLES DOMESTIQUES'\r\n"
+			+ "when a.code_secteur in ('11') then 'IMMOBILIER, LOCATION ET SERVICES AUX ENTREPRISES'\r\n"
+			+ "when a.code_secteur in ('14') then 'SANTE ET ACTION SOCIALE'\r\n"
+			+ "when a.code_secteur in ('6') then 'CONSTRUCTION'\r\n"
+			+ "when a.code_secteur in ('15') then 'SERVICES COLLECTIFS SOCIAUX ET PERSONNELS'\r\n"
+			+ "when a.code_secteur in ('16') then 'SERVICES DOMESTIQUES'\r\n"
+			+ "when a.code_secteur in ('8') then 'HOTELS ET RESTAURANTS'\r\n"
+			+ "else  'Particulier'\r\n"
+			+ "end) as desc_secteur, sum(a.annee) annee, sum(a.anneePrec) anneePrec from(\r\n"
+			+ "SELECT count(id_client) annee, 0 anneePrec, code_secteur, desc_secteur FROM public.client\r\n"
 			+ "where client.reporting_date=to_date(:daterepo,'yyyy-MM-dd')\r\n"
 			+ "group by code_secteur, desc_secteur, reporting_date\r\n"
-			+ "\r\n"
 			+ "union\r\n"
-			+ "\r\n"
-			+ "SELECT count(id_client) annee, 0 anneePrec, desc_secteur FROM public.client\r\n"
+			+ "SELECT count(id_client) annee, 0 anneePrec, code_secteur, desc_secteur FROM public.client\r\n"
 			+ "where client.reporting_date=to_date(:daterepo,'yyyy-MM-dd')-365\r\n"
 			+ "group by code_secteur, desc_secteur, reporting_date\r\n"
-			+ ") a",nativeQuery = true)	
+			+ ")	a\r\n"
+			+ "	group by a.code_secteur\r\n"
+			+ ") b	\r\n"
+			+ " group by 1 order by 1"	,nativeQuery = true)	
     List<String[]> findGroupedBySecteur(@Param("daterepo")String daterepo);
     
     @Query( value= "select cast(sum(a.anneePrec) as character varying) as anneePrec, cast(sum(a.annee) as character varying) as annee from(\r\n"

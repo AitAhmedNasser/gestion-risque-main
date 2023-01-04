@@ -32,7 +32,7 @@ private final UploadUtil uploadUtil;
 	}
 
 	
-	int k=0;
+	int k = 0;
 	
 	public List<Map<String, String>> upload(MultipartFile file) throws Exception {
 		//***** Local path *****
