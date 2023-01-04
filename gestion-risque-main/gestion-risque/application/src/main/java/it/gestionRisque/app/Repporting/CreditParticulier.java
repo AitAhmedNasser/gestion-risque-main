@@ -16,10 +16,10 @@ public class CreditParticulier {
 	private Double creanceDouteuse;
 	private Double creanceCourant;
 	private Double interetReserve;
-	private  Double provisions;
+	private Double provisions;
 	private Double tauxCreanceDouteuse;
 	private Double tauxOuverture;
-	private  Double InteretreservesCreancesDouteuse;
+	private Double InteretreservesCreancesDouteuse;
 	private Double creanceDouteuseNets ;
 	private Double creditDirectNetInteretReserve;
 }

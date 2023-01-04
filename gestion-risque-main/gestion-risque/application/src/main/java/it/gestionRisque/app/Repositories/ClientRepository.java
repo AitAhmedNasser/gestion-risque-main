@@ -31,5 +31,29 @@ Optional<Client> findByObligoreIdAndReportingDate (String obligoreId, String rep
 			+ "	EXTRACT(YEAR from client.reporting_date )<= :year group by client.reporting_date ",nativeQuery = true)
 	List<String> findBetweenTowDate(@Param("lastdatereport") String lastdatereport , @Param("year") Integer reportingDateyear);
 
- 
+	@Query( value= "select a.desc_secteur, a.anneePrec, a.annee from(\r\n"
+			+ "SELECT count(id_client) annee, 0 anneePrec, desc_secteur FROM public.client\r\n"
+			+ "where client.reporting_date=to_date(:daterepo,'yyyy-MM-dd')\r\n"
+			+ "group by code_secteur, desc_secteur, reporting_date\r\n"
+			+ "\r\n"
+			+ "union\r\n"
+			+ "\r\n"
+			+ "SELECT count(id_client) annee, 0 anneePrec, desc_secteur FROM public.client\r\n"
+			+ "where client.reporting_date=to_date(:daterepo,'yyyy-MM-dd')-365\r\n"
+			+ "group by code_secteur, desc_secteur, reporting_date\r\n"
+			+ ") a",nativeQuery = true)	
+    List<String[]> findGroupedBySecteur(@Param("daterepo")String daterepo);
+    
+    @Query( value= "select cast(sum(a.anneePrec) as character varying) as anneePrec, cast(sum(a.annee) as character varying) as annee from(\r\n"
+			+ "SELECT count(id_client) annee, 0 anneePrec, desc_secteur FROM public.client\r\n"
+			+ "where client.reporting_date=to_date(:daterepo,'yyyy-MM-dd')\r\n"
+			+ "group by code_secteur, desc_secteur, reporting_date\r\n"
+			+ "\r\n"
+			+ "union\r\n"
+			+ "\r\n"
+			+ "SELECT count(id_client) annee, 0 anneePrec, desc_secteur FROM public.client\r\n"
+			+ "where client.reporting_date=to_date(:daterepo,'yyyy-MM-dd')-365\r\n"
+			+ "group by code_secteur, desc_secteur, reporting_date\r\n"
+			+ ") a",nativeQuery = true)	
+    List<String[]> findTotalGroupedBySecteur(@Param("daterepo")String daterepo);
 }

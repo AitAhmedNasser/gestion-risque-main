@@ -6,6 +6,7 @@ import java.util.Map;
 import javax.transaction.Transactional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.repository.query.Param;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
@@ -31,7 +32,13 @@ public class ClientService {
 	
 	
 	
+	public List<String[]> findBySecteur(String daterepo) {
+		return clientRepository.findGroupedBySecteur(daterepo);
+	}
 	
+	public List<String[]> findTotalBySecteur(String daterepo) {
+		return clientRepository.findTotalGroupedBySecteur(daterepo);
+	}
 	
 	
 	
