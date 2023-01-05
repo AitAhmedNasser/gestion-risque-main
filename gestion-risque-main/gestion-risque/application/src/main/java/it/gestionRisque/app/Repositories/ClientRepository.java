@@ -42,7 +42,7 @@ Optional<Client> findByObligoreIdAndReportingDate (String obligoreId, String rep
 			+ "when a.code_secteur in ('15') then 'SERVICES COLLECTIFS SOCIAUX ET PERSONNELS'\r\n"
 			+ "when a.code_secteur in ('16') then 'SERVICES DOMESTIQUES'\r\n"
 			+ "when a.code_secteur in ('8') then 'HOTELS ET RESTAURANTS'\r\n"
-			+ "else  'Particulier'\r\n"
+			+ "else  'PARTICULIERS'\r\n"
 			+ "end) as desc_secteur, sum(a.annee) annee, sum(a.anneePrec) anneePrec from(\r\n"
 			+ "SELECT count(id_client) annee, 0 anneePrec, code_secteur, desc_secteur FROM public.client\r\n"
 			+ "where client.reporting_date=to_date(:daterepo,'yyyy-MM-dd')\r\n"
