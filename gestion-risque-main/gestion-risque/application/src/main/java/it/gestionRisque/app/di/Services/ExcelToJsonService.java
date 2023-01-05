@@ -36,7 +36,7 @@ private final UploadUtil uploadUtil;
 	
 	public List<Map<String, String>> upload(MultipartFile file) throws Exception {
 		//***** Local path *****
-	    //String filePath ="C:\\gestion-des-risques-main-1\\maven.1671706755056\\gestion-risque-main\\gestion-risque\\application\\src\\main\\resources\\"+file.getOriginalFilename();
+	   // String filePath ="C:\\gestion-des-risques-main-1\\maven.1671706755056\\gestion-risque-main\\gestion-risque\\application\\src\\main\\resources\\"+file.getOriginalFilename();
 		
 		// ***** Remote Path *****
 		String filePath ="/home/gstrisques/Desktop/excel-files/"+file.getOriginalFilename();
