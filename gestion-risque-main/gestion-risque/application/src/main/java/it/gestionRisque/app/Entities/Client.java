@@ -1,6 +1,7 @@
 package it.gestionRisque.app.Entities;
 
 import java.io.Serializable;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.util.Date;
@@ -16,6 +17,7 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.IdClass;
 import javax.persistence.OneToMany;
 
 import org.apache.poi.ss.usermodel.DateUtil;
@@ -28,12 +30,14 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
+@IdClass(ClientId.class)
 public class Client implements Serializable{
-
+ 
 @Id
 @Column(name = "ID_CLIENT")
 private String obligoreId;
 
+@Id
 @Column(name = "reportingDate")
 private Date reportingDate;
 
@@ -135,30 +139,31 @@ public Client(String obligoreId, Date reportingDate,  String obligoreName,  Stri
 
 
 // ----  Client From JSON
-	public static Client clientFromJSON(Map<String, String> data) {
-	 String obligorId = (data.get("OBLIGOR_ID")!= "" && data.get("OBLIGOR_ID")!=null)? data.get("OBLIGOR_ID"):null;
-	 Double reportingDate = (data.get("REPORTING_DATE")!= "" && data.get("REPORTING_DATE")!=null)? Double.parseDouble(data.get("REPORTING_DATE")):null;	
-	 String obligorName = (data.get("OBLIGOR_NAME")!= "" && data.get("OBLIGOR_NAME")!=null)? data.get("OBLIGOR_NAME"):null;
-	 String customerType = (data.get("CUSTOMER_TYPE")!= "" && data.get("CUSTOMER_TYPE")!=null)? data.get("CUSTOMER_TYPE"):null;
-	 Integer entitieCode =  (data.get("ENTITY_CODE")!= "" && data.get("ENTITY_CODE")!=null)? Integer.parseInt(data.get("ENTITY_CODE")):null;
-	 String borrowerType = (data.get("BORROWER_TYPE")!= "" && data.get("BORROWER_TYPE")!=null)? data.get("BORROWER_TYPE"):null;
-	 String groupId = (data.get("GROUP_ID")!= "" && data.get("GROUP_ID")!=null)? data.get("GROUP_ID"):null;
-	 String groupName = (data.get("GROUP_NAME")!= "" && data.get("GROUP_NAME")!=null)? data.get("GROUP_NAME"):null;
-	 String solId = (data.get("SOL_NAME")!= "" && data.get("SOL_NAME")!=null)? data.get("SOL_NAME"):null;
-	 String solDescription = (data.get("SOL_DESCRIPTION")!= "" && data.get("SOL_DESCRIPTION")!=null)? data.get("SOL_DESCRIPTION"):null;
-	 String defaultFlagMain = (data.get("DEFAULT_FLAG_MAIN")!= "" && data.get("DEFAULT_FLAG_MAIN")!=null)? data.get("DEFAULT_FLAG_MAIN"):null;
-	 String defaultFlagSub = (data.get("DEFAULT_FLAG_SUB")!= "" && data.get("DEFAULT_FLAG_SUB")!=null)? data.get("DEFAULT_FLAG_SUB"):null;
-	 String defaultFlageDesc = (data.get("DEFAULT_FLAG_DESC")!= "" && data.get("DEFAULT_FLAG_DESC")!=null)? data.get("DEFAULT_FLAG_DESC"):null;
-	 String wliyaCode = (data.get("WILAYA_CODE")!= "" && data.get("WILAYA_CODE")!=null)? data.get("WILAYA_CODE"):null;
-	 String wilayaCodeDescription =  (data.get("WILAYA_CODE_DESCRIPTION")!= "" && data.get("WILAYA_CODE_DESCRIPTION")!=null)? data.get("WILAYA_CODE_DESCRIPTION"):null;
-	 String industryCode = (data.get("INDUSTRY_CODE")!= "" && data.get("INDUSTRY_CODE")!=null)? data.get("INDUSTRY_CODE"):null;
-	 String industryCodeDesc = (data.get("INDUSTRY_CODE_DESC")!= "" && data.get("INDUSTRY_CODE_DESC")!=null)? data.get("INDUSTRY_CODE_DESC"):null;
-	 String subsectorCode = (data.get("SUBSECTOR_CODE")!= "" && data.get("SUBSECTOR_CODE")!=null)? data.get("SUBSECTOR_CODE"):null;
-	 String subsectorCodeDesc = (data.get("SUBSECTOR_CODE_DESC")!= "" && data.get("SUBSECTOR_CODE_DESC")!=null)? data.get("SUBSECTOR_CODE_DESC"):null;
+	public static Client clientFromJSON(Map<String, String> data) throws ParseException {
+	 String obligorId = (data.get("ID_CLIENT")!= "" && data.get("ID_CLIENT")!=null)? data.get("ID_CLIENT"):null;
+	 String reportingDate = (data.get("Date")!= "" && data.get("Date")!=null)? (data.get("Date")):null;	
+	 String obligorName = (data.get("NOM_CLIENT")!= "" && data.get("NOM_CLIENT")!=null)? data.get("NOM_CLIENT").trim():null;
+	 String customerType = (data.get("TYPE_CLIENT")!= "" && data.get("TYPE_CLIENT")!=null)? data.get("TYPE_CLIENT"):null;
+	 Integer entitieCode =  (data.get("ENTITY_CODE")!= "" && data.get("ENTITY_CODE")!=null)? Integer.parseInt(data.get("ENTITY_CODE").trim()):null;
+	 String borrowerType = (data.get("TYPE_EMPRUNTEUR")!= "" && data.get("TYPE_EMPRUNTEUR")!=null)? data.get("TYPE_EMPRUNTEUR").trim():null;
+	 String groupId = (data.get("ID_GROUPE")!= "" && data.get("ID_GROUPE")!=null)? data.get("ID_GROUPE"):null;
+	 String groupName = (data.get("NOM_GROUPE")!= "" && data.get("NOM_GROUPE")!=null)? data.get("NOM_GROUPE"):null;
+	 String solId = (data.get("CODE_AGENCE")!= "" && data.get("CODE_AGENCE")!=null)? data.get("CODE_AGENCE"):null;
+	 String solDescription = (data.get("DESC_AGENCE")!= "" && data.get("DESC_AGENCE")!=null)? data.get("DESC_AGENCE"):null;
+	 String defaultFlagMain = (data.get("CLASS_PRINCIPALE_CLIENT")!= "" && data.get("CLASS_PRINCIPALE_CLIENT")!=null)? data.get("CLASS_PRINCIPALE_CLIENT"):null;
+	 String defaultFlagSub = (data.get("SOUS_CLASS_CLIENT")!= "" && data.get("SOUS_CLASS_CLIENT")!=null)? data.get("SOUS_CLASS_CLIENT"):null;
+	 String defaultFlageDesc = (data.get("DESC_SOUS_CLASS_CLIENT")!= "" && data.get("DESC_SOUS_CLASS_CLIENT")!=null)? data.get("DESC_SOUS_CLASS_CLIENT"):null;
+	 String wliyaCode = (data.get("CODE_ WILAYA")!= "" && data.get("CODE_ WILAYA")!=null)? data.get("CODE_ WILAYA"):null;
+	 String wilayaCodeDescription =  (data.get("DESC_ WILAYA")!= "" && data.get("DESC_ WILAYA")!=null)? data.get("DESC_ WILAYA"):null;
+	 String industryCode = (data.get("CODE_SECTEUR")!= "" && data.get("CODE_SECTEUR")!=null)? data.get("CODE_SECTEUR"):null;
+	 String industryCodeDesc = (data.get("DESC_SECTEUR")!= "" && data.get("DESC_SECTEUR")!=null)? data.get("DESC_SECTEUR"):null;
+	 String subsectorCode = (data.get("CODE_ SUBSECTOR")!= "" && data.get("CODE_ SUBSECTOR")!=null)? data.get("CODE_ SUBSECTOR"):null;
+	 String subsectorCodeDesc = (data.get("DESC_SUBSECTOR")!= "" && data.get("DESC_SUBSECTOR")!=null)? data.get("DESC_SUBSECTOR"):null;
 	 
 	 String reportingDateToInsert;
-	 Date javaDate = DateUtil.getJavaDate((double) reportingDate);
+	 Date javaDate =  new SimpleDateFormat("yyyy-MM-dd").parse(reportingDate);
 	 if(reportingDate != null) {
+		 
 	//	 Date javaDate = DateUtil.getJavaDate((double) reportingDate);
 	 //DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yy");
 	 
