@@ -73,13 +73,13 @@ public SecurityConfig(PasswordEncoder passwordEncoder,UserDetailsService userDet
 	      .exceptionHandling().authenticationEntryPoint(unauthorizedHandler).and()
 			.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
 			 .authorizeRequests(authorizeRequests ->
-			authorizeRequests
-			.antMatchers("/api/**").hasAnyAuthority("ConsulterUser")
+		        authorizeRequests
+			            .antMatchers("/portfeuilleIndirect/**").hasAnyAuthority("ConsulterUser")
+			    )
 
+				.authorizeRequests().antMatchers("/Auth/**","api/Ressources/","api/privileges","/creditParticulier/**","/seed").permitAll()
+				.anyRequest().permitAll();
 
-)
-.authorizeRequests().antMatchers("/Auth/**").permitAll()
-.anyRequest().permitAll();
 	    http.addFilterBefore(authenticationJwtTokenFilter(), UsernamePasswordAuthenticationFilter.class);
 
 	    return http.build();

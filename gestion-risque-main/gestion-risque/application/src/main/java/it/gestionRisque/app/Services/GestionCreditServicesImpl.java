@@ -1,6 +1,8 @@
 package it.gestionRisque.app.Services;
 
 import java.text.DateFormat;
+import java.text.DecimalFormat;
+import java.text.DecimalFormatSymbols;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
@@ -121,7 +123,18 @@ public class GestionCreditServicesImpl implements GestionCreditService {
 	// clacule pour credit particulier pour repporting
 	@Override
 	public CreditParticulier addToCredit(String dateREPO) throws ParseException {
+		 DecimalFormat df = new DecimalFormat("0.00"); // import java.text.DecimalFormat;
+		 
+		 //decimal forma
+		 Locale locale = new Locale("en", "UK");
 
+		 DecimalFormatSymbols symbols = new DecimalFormatSymbols(locale);
+		 symbols.setDecimalSeparator(',');
+		 symbols.setGroupingSeparator(' ');
+
+		 String pattern = "#,##0.##";
+		 DecimalFormat decimalFormat = new DecimalFormat(pattern, symbols);
+		 
 		HashMap<String, Double> map = new HashMap<String, Double>();
 		HashMap<Long, Double> IntervRes = new HashMap<Long, Double>();
 		HashMap<Long, Double> efect = new HashMap<Long, Double>();
@@ -161,7 +174,10 @@ public class GestionCreditServicesImpl implements GestionCreditService {
 
 				double SomIntervRes = IntervRes.values().stream().mapToDouble(Double::intValue).sum();
 				double somEffect = efect.values().stream().mapToDouble(Double::intValue).sum();
-
+				// format double  with  personnal patern
+			
+				
+			
 				creditPar.setCreditTotaldirect(soldBaSom);
 				creditPar.setInteretReserve(SomIntervRes);
 				creditPar.setProvisions(somEffect);
@@ -223,7 +239,18 @@ public class GestionCreditServicesImpl implements GestionCreditService {
 	// clacule pour credit entreprise pour repporting
 
 	@Override
-	public CreditEntreprise addToCreditEntre(String dateREPO) throws ParseException {
+	public CreditEntreprise addToCreditEntre(String dateREPO) throws ParseException { 
+		 DecimalFormat df = new DecimalFormat("0.00"); // import java.text.DecimalFormat;
+		 
+		 //decimal forma
+		 Locale locale = new Locale("en", "UK");
+
+		 DecimalFormatSymbols symbols = new DecimalFormatSymbols(locale);
+		 symbols.setDecimalSeparator(',');
+		 symbols.setGroupingSeparator(' ');
+
+		 String pattern = "#,##0.##";
+		 
 		HashMap<String, Double> map = new HashMap<String, Double>();
 		HashMap<Long, Double> IntervRes = new HashMap<Long, Double>();
 		HashMap<Long, Double> efect = new HashMap<Long, Double>();
@@ -352,14 +379,27 @@ public class GestionCreditServicesImpl implements GestionCreditService {
 
 	@Override
 	public PortefeuilleIndirect addtPortefeuilleIndirect(String type, String dateReport) {
+		 DecimalFormat df = new DecimalFormat("0.00"); // import java.text.DecimalFormat;
+		 
+		 //decimal forma
+		 Locale locale = new Locale("en", "UK");
 
+		 DecimalFormatSymbols symbols = new DecimalFormatSymbols(locale);
+		 symbols.setDecimalSeparator(',');
+		 symbols.setGroupingSeparator(' ');
+
+		 String pattern = "#,##0.##";
+		 DecimalFormat decimalFormat = new DecimalFormat(pattern, symbols);
+
+	
+        		
 		Map<String, Double> result = new HashMap<String, Double>();
 		
 		List<RapportType> rapports = rapportTypeRepository.findByTypes(type);
 		
 		String columnToSum = "nominalExposure";
 		PortefeuilleIndirect indirect = new PortefeuilleIndirect();
-		   System.out .println("rapport type  " + rapports);
+		
 		for (RapportType rap : rapports) {
 
 			JSONArray jsonArray = rap.getKeyValueMap();
@@ -375,17 +415,31 @@ public class GestionCreditServicesImpl implements GestionCreditService {
 					engaggementrepositoryImpl.sum(genericSpesification, Double.class, columnToSum, dateReport));
 			for (Map.Entry<String, Double> entry : result.entrySet()) {
 				indirect.setTypes(type);
+		System.out.println("type "   +type);
 				if (("cautions".concat("").concat(type.replace(" ", ""))).equalsIgnoreCase(entry.getKey().replace(" ", ""))) {
+				;
+					 String number = decimalFormat.format(entry.getValue());
+					
+						indirect.setCautions(entry.getValue());
+					
+			
+				
+				} else if (("aval".concat("").concat(type.replace(" ", ""))).equalsIgnoreCase(entry.getKey().replace(" ", ""))) {
+				
+					 String number = decimalFormat.format(entry.getValue());
+						indirect.setAval(entry.getValue());
+				
+				} else if (("obligationscautionnéesdedouane".concat("").concat(type.replace(" ", ""))).equalsIgnoreCase(entry.getKey().replace(" ", ""))) {
 				
 					
-					indirect.setCautions(entry.getValue());
-				} else if (("aval".concat("").concat(type.replace(" ", ""))).equalsIgnoreCase(entry.getKey().replace(" ", ""))) {
-					indirect.setAval(entry.getValue());
-					
-				} else if (("obligationscautionnéesdedouane".concat("").concat(type.replace(" ", ""))).equalsIgnoreCase(entry.getKey().replace(" ", ""))) {
-					indirect.setObligationCautionneeDuanee(entry.getValue());
+						
+						indirect.setObligationCautionneeDuanee(entry.getValue());
+						
 				} else if (("ouverturedelettredecrédit".concat("").concat(type.replace(" ", ""))).equalsIgnoreCase(entry.getKey().replace(" ", ""))) {
-					indirect.setOuvertureLettreCredit(entry.getValue());			}
+					
+					System.out.println("valueeeeee" + entry.getValue());
+					indirect.setOuvertureLettreCredit(entry.getValue());
+					}
 				
 			}
 

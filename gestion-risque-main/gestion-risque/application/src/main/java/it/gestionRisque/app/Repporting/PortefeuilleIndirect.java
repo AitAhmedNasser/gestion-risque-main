@@ -8,7 +8,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class PortefeuilleIndirect {
- private Long id;
+
  private String types;
  private Double ouvertureLettreCredit;
  private Double cautions;

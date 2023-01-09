@@ -27,7 +27,7 @@ Optional<Client> findByObligoreIdAndReportingDate (String obligoreId, String rep
 	List<String> findByReportingDate( @Param("year") Integer reportingDate);
 	
 	// entre deux date 
-	@Query(value = "select  client.reporting_date from client where   to_char(client.reporting_date,'yyyy-MM-dd')>= :lastdatereport or   \n"
+	@Query(value = "select  client.reporting_date from client where   to_char(client.reporting_date,'yyyy-MM-dd')>= :lastdatereport and   \n"
 			+ "	EXTRACT(YEAR from client.reporting_date )<= :year group by client.reporting_date ",nativeQuery = true)
 	List<String> findBetweenTowDate(@Param("lastdatereport") String lastdatereport , @Param("year") Integer reportingDateyear);
 
