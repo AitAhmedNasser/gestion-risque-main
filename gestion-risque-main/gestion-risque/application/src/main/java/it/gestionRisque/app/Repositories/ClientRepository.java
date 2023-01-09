@@ -89,7 +89,7 @@ public interface ClientRepository extends JpaRepository<Client, Long> {
     List<String[]> findTotalGroupedBySecteur(@Param("daterepo")String daterepo);
     
     
-    @Query(value="select count(c.id_client) nbr_client,\r\n"
+    @Query(value="select coalesce(count(c.id_client),cast(0 as bigint)) nbr_client,\r\n"
     		+ "			 (case\r\n"
     		+ "			when c.desc_wilaya in ('ALGER','BOUMERDES','BLIDA','TIPAZA') then 'CENTRE' \r\n"
     		+ "			when c.desc_wilaya  in ('CONSTANTINE','SETIF','BEJAIA','MILA','OUM ELBOUAGHI','BOUIRA','BISKRA') then 'EST'\r\n"
