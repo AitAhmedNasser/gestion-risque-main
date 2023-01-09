@@ -399,7 +399,7 @@ public class GestionCreditServicesImpl implements GestionCreditService {
 		
 		String columnToSum = "nominalExposure";
 		PortefeuilleIndirect indirect = new PortefeuilleIndirect();
-		
+		  // System.out .println("rapport type  " + rapports);
 		for (RapportType rap : rapports) {
 
 			JSONArray jsonArray = rap.getKeyValueMap();

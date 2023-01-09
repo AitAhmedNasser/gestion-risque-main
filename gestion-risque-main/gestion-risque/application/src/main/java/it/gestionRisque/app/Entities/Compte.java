@@ -1,5 +1,6 @@
 package it.gestionRisque.app.Entities;
 
+import java.text.ParseException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.Date;
@@ -13,6 +14,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.JoinColumns;
 import javax.persistence.ManyToOne;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
@@ -44,25 +46,25 @@ public class Compte {
 	private String accountStatus;
 	
 	@ManyToOne(cascade = CascadeType.ALL)
-	@JoinColumn(name = "id_client",referencedColumnName = "ID_CLIENT")
+	@JoinColumns({ @JoinColumn(name = "id_client", referencedColumnName = "ID_CLIENT"),
+		@JoinColumn(name = "reporting_date", referencedColumnName = "reportingDate") })
 	@JsonBackReference
 	private Client client;
 
 
 	// -----Engagement From JSON
-		public static Compte compteFromJSON(Map<String, String> data) {
-		 String accountNumber = (data.get("ACCOUNT_NUMBER")!= "" && data.get("ACCOUNT_NUMBER")!=null)? data.get("ACCOUNT_NUMBER"):null;
-		 String openDate = (data.get("OPEN_DATE")!= "" && data.get("OPEN_DATE")!=null)? data.get("OPEN_DATE"):null;
+		public static Compte compteFromJSON(Map<String, String> data) throws ParseException {
+		 String accountNumber = (data.get("NUMERO_COMPTE")!= "" && data.get("NUMERO_COMPTE")!=null)? data.get("NUMERO_COMPTE"):null;
+		 String openDate = (data.get("DATE_ENGAGEMENT")!= "" && data.get("DATE_ENGAGEMENT")!=null)? data.get("DATE_ENGAGEMENT"):null;
 		 String isoCurCode = (data.get("ISO_CUR_CODE")!= "" && data.get("ISO_CUR_CODE")!=null)? data.get("ISO_CUR_CODE"):null;
-		 String accountStatus = (data.get("ACCOUNT_STATUS")!= "" && data.get("ACCOUNT_STATUS")!=null)? data.get("ACCOUNT_STATUS"):null;
+		 String accountStatus = (data.get("STATUT_COMPTE")!= "" && data.get("STATUT_COMPTE")!=null)? data.get("STATUT_COMPTE"):null;
 		 Client client =  Client.clientFromJSON(data);
 		 
-		 DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yy");
+		 DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yy");
 		 LocalDate openDateToInsert = openDate !=null ? LocalDate.parse(openDate, formatter) : null;
 		 
 		 Compte compte = new Compte(0L, accountNumber, openDateToInsert, isoCurCode, accountStatus, client);
 
-		
 		 return compte;
 		}
 

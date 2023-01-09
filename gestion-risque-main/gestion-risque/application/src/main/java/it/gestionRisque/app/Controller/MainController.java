@@ -29,6 +29,7 @@ import it.gestionRisque.app.Repporting.CreditParticulier;
 import it.gestionRisque.app.Repporting.PortefeuilleIndirect;
 import it.gestionRisque.app.Services.GestionCreditService;
 import it.gestionRisque.app.Services.RepportServices;
+import it.gestionRisque.app.di.Services.ClientService;
 import lombok.AllArgsConstructor;
 import net.sf.jasperreports.engine.JRException;
 @RestController
@@ -39,6 +40,8 @@ public class MainController {
 	
 	private GestionCreditService gestionCreditservices ;
 	private RepportServices creditService;
+	
+	private ClientService clientService;
 	
 	@PostMapping("/saveClient")
 	 public Client saveClient(@RequestBody Client client)  {
@@ -55,7 +58,7 @@ public class MainController {
 	
 	
 	
-	//engagment
+	//Engagement
 	
 	@PostMapping("/saveEngagement")
 	public Engagement saveEngagement(@RequestBody Engagement engagement) {
@@ -92,12 +95,11 @@ public class MainController {
 	}
 	
 	
-	
 	@GetMapping("/allReportDate/{year}")
 	public List<String> getAllDateRepo(@PathVariable("year")  Integer year){
 		List<String> mylist =gestionCreditservices.getClientByDateRepo(year); 
 	
-		System.out.println("date d " +mylist);
+		//System.out.println("date d " +mylist);
 		 return mylist;
 	}
 	
@@ -128,5 +130,23 @@ public class MainController {
 	 public List<String> getReportBeween(@PathVariable("dateRepo") String lastdate,@PathVariable("year")  Integer  year){
 		 return gestionCreditservices.getReportingDateBetween(lastdate, year);
 	 }
+	 
+	 
+	 @GetMapping("/findGroupedBySecteur/{dateRepos}")
+		public List<String[]> findGroupedBySecteur(@PathVariable("dateRepos")  String dateRepo) throws ParseException  {
+		   // Date date1=new SimpleDateFormat("yyyy-MM-dd").parse(dateRepo); 
+			//LocalDate localDate = LocalDate.parse(dateRepo);
+		    List<String[]> listSecteurs = clientService.findBySecteur(dateRepo);
+			return  listSecteurs;
+		}
+	
+		 @GetMapping("/findTotalGroupedBySecteur/{dateRepos}")
+			public List<String[]> findTotalGroupedBySecteur(@PathVariable("dateRepos")  String dateRepo) throws ParseException  {
+			   // Date date1=new SimpleDateFormat("yyyy-MM-dd").parse(dateRepo); 
+				//LocalDate localDate = LocalDate.parse(dateRepo);
+			 List<String[]> totalParSecteurs = clientService.findTotalBySecteur(dateRepo);
+				return  totalParSecteurs;
+			}
+		
 	
 }

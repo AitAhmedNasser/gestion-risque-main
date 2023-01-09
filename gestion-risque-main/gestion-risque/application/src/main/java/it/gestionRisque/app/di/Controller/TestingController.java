@@ -13,7 +13,7 @@ public class TestingController {
 	@PostMapping("/testing")
 	public String upload() throws Exception{
 		  Date javaDate= DateUtil.getJavaDate((double) 41275.00);
-	       System.out.println(new SimpleDateFormat("MM/dd/yyyy").format(javaDate));
+	      // System.out.println(new SimpleDateFormat("MM/dd/yyyy").format(javaDate));
 	       return new SimpleDateFormat("MM/dd/yyyy").format(javaDate);
 	}
 
