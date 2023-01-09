@@ -40,6 +40,14 @@ public class ClientService {
 		return clientRepository.findTotalGroupedBySecteur(daterepo);
 	}
 	
+	public List<String[]> findByZone(String daterepo) {
+		return clientRepository.findGroupedByZone(daterepo);
+	}
+	
+	public List<String[]> findTotalByZone(String daterepo) {
+		return clientRepository.findTotalGroupedByZone(daterepo);
+	}
+	
 	
 	
 	
