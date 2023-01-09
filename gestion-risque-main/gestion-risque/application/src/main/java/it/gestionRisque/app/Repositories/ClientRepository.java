@@ -87,5 +87,36 @@ public interface ClientRepository extends JpaRepository<Client, Long> {
 			+ "group by code_secteur, desc_secteur, reporting_date\r\n"
 			+ ") a",nativeQuery = true)	
     List<String[]> findTotalGroupedBySecteur(@Param("daterepo")String daterepo);
+    
+    
+    @Query(value="select coalesce(count(c.id_client),cast(0 as bigint)) nbr_client,\r\n"
+    		+ "			 (case\r\n"
+    		+ "			when c.desc_wilaya in ('ALGER','BOUMERDES','BLIDA','TIPAZA') then 'CENTRE' \r\n"
+    		+ "			when c.desc_wilaya  in ('CONSTANTINE','SETIF','BEJAIA','MILA','OUM ELBOUAGHI','BOUIRA','BISKRA') then 'EST'\r\n"
+    		+ "			when c.desc_wilaya  in ('MEDEA','ORAN', 'CHLEF') then 'OUEST'\r\n"
+    		+ "         when c.desc_wilaya  is null then 'AUTRES'"
+    		+ "			end) as zone ,(case"
+    		+ "    					when c.desc_wilaya in ('ALGER','BOUMERDES','BLIDA','TIPAZA') then 1 \r\n"
+    		+ "    					when c.desc_wilaya  in ('CONSTANTINE','SETIF','BEJAIA','MILA','OUM ELBOUAGHI','BOUIRA','BISKRA') then 2\r\n"
+    		+ "    					when c.desc_wilaya  in ('MEDEA','ORAN', 'CHLEF') then 3\r\n"
+    		+ "    		        when c.desc_wilaya  is null then 4\r\n"
+    		+ "    					end) ordre "
+    		+ "from client c	\r\n"
+    		+ "where c.reporting_date=to_date(:daterepo,'yyyy-MM-dd') \r\n"
+    		+ "group by zone,ordre order by ordre",nativeQuery = true)
+    List<String[]> findGroupedByZone(@Param("daterepo")String daterepo);
+    
+    @Query(value="select sum(a.nbr_client) from (\r\n"
+    		+ "select count(c.id_client) nbr_client,\r\n"
+    		+ "			 (case\r\n"
+    		+ "			when c.desc_wilaya in ('ALGER','BOUMERDES','BLIDA','TIPAZA') then 'CENTRE' \r\n"
+    		+ "			when c.desc_wilaya  in ('CONSTANTINE','SETIF','BEJAIA','MILA','OUM ELBOUAGHI','BOUIRA','BISKRA') then 'EST'\r\n"
+    		+ "			when c.desc_wilaya  in ('MEDEA','ORAN', 'CHLEF') then 'OUEST'\r\n"
+    		+ "         when c.desc_wilaya  is null then 'AUTRES'"
+    		+ "			end) as zone \r\n"
+    		+ "from client c	\r\n"
+    		+ "where c.reporting_date=to_date(:daterepo,'yyyy-MM-dd')"
+    		+ "group by zone) a",nativeQuery = true)
+    List<String[]> findTotalGroupedByZone(@Param("daterepo")String daterepo);
 
 }
