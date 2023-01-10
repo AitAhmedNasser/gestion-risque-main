@@ -62,11 +62,11 @@ public interface ClientRepository extends JpaRepository<Client, Long> {
 			+ "when a.code_secteur in ('8') then 'HOTELS ET RESTAURANTS'\r\n"
 			+ "else  'PARTICULIERS'\r\n"
 			+ "end) as desc_secteur, sum(a.annee) annee, sum(a.anneePrec) anneePrec from(\r\n"
-			+ "SELECT count(id_client) annee, 0 anneePrec, code_secteur, desc_secteur FROM public.client\r\n"
+			+ "SELECT sum(solde_balance) annee, 0 anneePrec, code_secteur, desc_secteur FROM public.client\r\n"
 			+ "where client.reporting_date=to_date(:daterepo,'yyyy-MM-dd')\r\n"
 			+ "group by code_secteur, desc_secteur, reporting_date\r\n"
 			+ "union\r\n"
-			+ "SELECT count(id_client) annee, 0 anneePrec, code_secteur, desc_secteur FROM public.client\r\n"
+			+ "SELECT sum(solde_balance) annee, 0 anneePrec, code_secteur, desc_secteur FROM public.client\r\n"
 			+ "where client.reporting_date=to_date(:daterepo,'yyyy-MM-dd')-365\r\n"
 			+ "group by code_secteur, desc_secteur, reporting_date\r\n"
 			+ ")	a\r\n"
@@ -76,20 +76,20 @@ public interface ClientRepository extends JpaRepository<Client, Long> {
     List<String[]> findGroupedBySecteur(@Param("daterepo")String daterepo);
     
     @Query( value= "select cast(sum(a.anneePrec) as character varying) as anneePrec, cast(sum(a.annee) as character varying) as annee from(\r\n"
-			+ "SELECT count(id_client) annee, 0 anneePrec, desc_secteur FROM public.client\r\n"
+			+ "SELECT sum(solde_balance) annee, 0 anneePrec, desc_secteur FROM public.client\r\n"
 			+ "where client.reporting_date=to_date(:daterepo,'yyyy-MM-dd')\r\n"
 			+ "group by code_secteur, desc_secteur, reporting_date\r\n"
 			+ "\r\n"
 			+ "union\r\n"
 			+ "\r\n"
-			+ "SELECT count(id_client) annee, 0 anneePrec, desc_secteur FROM public.client\r\n"
+			+ "SELECT 0 annee, sum(solde_balance) anneePrec, desc_secteur FROM public.client\r\n"
 			+ "where client.reporting_date=to_date(:daterepo,'yyyy-MM-dd')-365\r\n"
 			+ "group by code_secteur, desc_secteur, reporting_date\r\n"
 			+ ") a",nativeQuery = true)	
     List<String[]> findTotalGroupedBySecteur(@Param("daterepo")String daterepo);
     
     
-    @Query(value="select coalesce(count(c.id_client),cast(0 as bigint)) nbr_client,\r\n"
+    @Query(value="select coalesce(sum(c.solde_balance),cast(0 as bigint)) montant,\r\n"
     		+ "			 (case\r\n"
     		+ "			when c.desc_wilaya in ('ALGER','BOUMERDES','BLIDA','TIPAZA') then 'CENTRE' \r\n"
     		+ "			when c.desc_wilaya  in ('CONSTANTINE','SETIF','BEJAIA','MILA','OUM ELBOUAGHI','BOUIRA','BISKRA') then 'EST'\r\n"
@@ -106,8 +106,8 @@ public interface ClientRepository extends JpaRepository<Client, Long> {
     		+ "group by zone,ordre order by ordre",nativeQuery = true)
     List<String[]> findGroupedByZone(@Param("daterepo")String daterepo);
     
-    @Query(value="select sum(a.nbr_client) from (\r\n"
-    		+ "select count(c.id_client) nbr_client,\r\n"
+    @Query(value="select sum(a.montant) from (\r\n"
+    		+ "select count(c.solde_balance) montant,\r\n"
     		+ "			 (case\r\n"
     		+ "			when c.desc_wilaya in ('ALGER','BOUMERDES','BLIDA','TIPAZA') then 'CENTRE' \r\n"
     		+ "			when c.desc_wilaya  in ('CONSTANTINE','SETIF','BEJAIA','MILA','OUM ELBOUAGHI','BOUIRA','BISKRA') then 'EST'\r\n"
