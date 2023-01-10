@@ -38,6 +38,9 @@ public class Agence implements Serializable {
 
 	@Column(name = "Description")
 	private String description;
+	
+	@Column(name = "region", length = 2)
+	private String region;
 
 	@OneToMany(mappedBy = "agence")
 	@JsonIgnore

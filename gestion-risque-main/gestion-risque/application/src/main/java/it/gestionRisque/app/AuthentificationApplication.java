@@ -56,16 +56,20 @@ public class AuthentificationApplication {
 			Role role3=accountService.addNewRolle(new Role(null, "Manager Risque ", Niv_1,new ArrayList<>(),new HashSet()));
 
 			//Create agence
-			Agence agence1 =  accountService.AddAgence(new Agence(null, "BNA", "l'agence de BNA", new ArrayList<>()));
-			Agence agence2 =  accountService.AddAgence(new Agence(null, "BA", "l'agence de BA", new ArrayList<>()));
-			Agence agence3 =  accountService.AddAgence(new Agence(null, "Housing", "l'agence 3", new ArrayList<>()));
+			//Agence agence1 =  accountService.AddAgence(new Agence(null, "BNA", "l'agence de BNA", new ArrayList<>()));
+			//Agence agence2 =  accountService.AddAgence(new Agence(null, "BA", "l'agence de BA", new ArrayList<>()));
+			//Agence agence3 =  accountService.AddAgence(new Agence(null, "Housing", "l'agence 3", new ArrayList<>()));
 			
 			//	Create User
-			User user1=	accountService.addNewUser(new User(null,"Admin" ,"Admin" ,"Admin","admin@Risque.com","Admin1234",role1,agence1));
+			//User user1=	accountService.addNewUser(new User(null,"Admin" ,"Admin" ,"Admin","admin@Risque.com","Admin1234",role1,agence1));
 			
-			User user2 =accountService.addNewUser(new User(null,"Lyes","Lehara","LyesLehara","ManagerRisque@Risque.com","User4",role2,agence3));
+			//User user2 =accountService.addNewUser(new User(null,"Lyes","Lehara","LyesLehara","ManagerRisque@Risque.com","User4",role2,agence3));
 						
-		
+            User user1=	accountService.addNewUser(new User(null,"Admin" ,"Admin" ,"Admin","admin@Risque.com","Admin1234",role1,null));
+			
+			User user2 =accountService.addNewUser(new User(null,"User1","User1","User1","ManagerRisque@Risque.com","User1",role2,null));
+			
+			
 			//creer agence 
 			
 		
