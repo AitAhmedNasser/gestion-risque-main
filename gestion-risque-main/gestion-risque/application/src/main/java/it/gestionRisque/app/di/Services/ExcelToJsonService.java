@@ -37,13 +37,13 @@ public class ExcelToJsonService {
 
 	public List<Map<String, String>> upload(MultipartFile file) throws Exception {
 		// ***** Local path *****
-		String filePath = "C:\\maven.1672152540411\\gestion-risque-main\\gestion-risque\\application\\src\\main\\resources\\"
-				+ file.getOriginalFilename();
+		//String filePath = "C:\\maven.1672152540411\\gestion-risque-main\\gestion-risque\\application\\src\\main\\resources\\"
+		//		+ file.getOriginalFilename();
 
 
 		// ***** Remote Path *****
-		// String filePath = "/home/gstrisques/Desktop/excel-files/" +
-		// file.getOriginalFilename();
+		 String filePath = "/home/gstrisques/Desktop/excel-files/" +
+		 file.getOriginalFilename();
 		File fileToMove = new File(filePath);
 		file.transferTo(fileToMove);
 
