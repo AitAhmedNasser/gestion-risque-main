@@ -159,5 +159,29 @@ public class MainController {
 		List<String[]> totalParSecteurs = clientService.findTotalByZone(dateRepo);
 		return totalParSecteurs;
 	}
+	
+	@GetMapping("/findTauxByZone/{dateRepos}")
+	public List<String[]> findTauxByZone(@PathVariable("dateRepos") String dateRepo) throws ParseException {
+		// Date date1=new SimpleDateFormat("yyyy-MM-dd").parse(dateRepo);
+		// LocalDate localDate = LocalDate.parse(dateRepo);
+		List<String[]> totalParSecteurs = clientService.findTauxByZone(dateRepo);
+		return totalParSecteurs;
+	}
+	
+	@GetMapping("/findTauxBySecteur/{dateRepos}")
+	public List<String[]> findTauxBySecteur(@PathVariable("dateRepos") String dateRepo) throws ParseException {
+		// Date date1=new SimpleDateFormat("yyyy-MM-dd").parse(dateRepo);
+		// LocalDate localDate = LocalDate.parse(dateRepo);
+		List<String[]> totalParSecteurs = clientService.findTauxBySecteur(dateRepo);
+		return totalParSecteurs;
+	}
+	
+	@GetMapping("/findTotalTauxBySecteur/{dateRepos}")
+	public List<String[]> findTotalTauxBySecteur(@PathVariable("dateRepos") String dateRepo) throws ParseException {
+		// Date date1=new SimpleDateFormat("yyyy-MM-dd").parse(dateRepo);
+		// LocalDate localDate = LocalDate.parse(dateRepo);
+		List<String[]> totalParSecteurs = clientService.findTotalTauxBySecteur(dateRepo);
+		return totalParSecteurs;
+	}
 
 }
