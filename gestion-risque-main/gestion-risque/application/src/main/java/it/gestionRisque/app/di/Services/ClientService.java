@@ -1,5 +1,7 @@
 package it.gestionRisque.app.di.Services;
 
+import java.text.DecimalFormat;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -47,6 +49,85 @@ public class ClientService {
 	public List<String[]> findTotalByZone(String daterepo) {
 		return clientRepository.findTotalGroupedByZone(daterepo);
 	}
+	
+	
+	public List<String[]> findTauxByZone(String daterepo) {
+		
+		List<String[]> list = clientRepository.findGroupedByZone(daterepo);
+		String[] total = clientRepository.findTotalGroupedByZone(daterepo).get(0);
+		List<String[]> listTaux = new ArrayList<>();
+		DecimalFormat df = new DecimalFormat();
+		df.setMaximumFractionDigits(2);
+		df.applyPattern("#0.##");
+		Double tx ;
+		
+		for (String[] st:list) {
+			tx = (Double.parseDouble(st[0]) / Double.parseDouble(total[0]))*100;
+			String[] taux = {"",""};
+			//System.out.println("list : "+ Double.parseDouble(st[0]) / Double.parseDouble(total[0]) ) ;
+			taux[0] = df.format(tx) + " %";
+			taux[1] = st[1];
+			listTaux.add(taux);
+		}
+		return listTaux;
+	}
+	
+	
+public List<String[]> findTauxBySecteur(String daterepo) {
+		
+		List<String[]> list = clientRepository.findGroupedBySecteur(daterepo);
+		String[] total = clientRepository.findTotalGroupedBySecteur(daterepo).get(0);
+		List<String[]> listTaux = new ArrayList<>();
+		DecimalFormat df = new DecimalFormat();
+		df.setMaximumFractionDigits(2);
+		df.applyPattern("#0.##");
+		Double tx1 ;
+		Double tx2 ;
+		
+		for (String[] st:list) {
+			tx1 = (Double.parseDouble(st[1]) / Double.parseDouble(total[0]))*100;
+			tx2 = (Double.parseDouble(st[2]) / Double.parseDouble(total[1]))*100;
+			String[] taux = {"","",""};
+			//System.out.println("list : "+ Double.parseDouble(st[0]) / Double.parseDouble(total[0]) ) ;
+			taux[0] = st[0];
+			taux[1] =  df.format(tx1) + " %";
+			taux[2] =  df.format(tx2) + " %";
+			listTaux.add(taux);
+		}
+		return listTaux;
+	}
+
+
+public List<String[]> findTotalTauxBySecteur(String daterepo) {
+	
+	List<String[]> list = clientRepository.findGroupedBySecteur(daterepo);
+	String[] total = clientRepository.findTotalGroupedBySecteur(daterepo).get(0);
+	List<String[]> listTaux = new ArrayList<>();
+	DecimalFormat df = new DecimalFormat();
+	df.setMaximumFractionDigits(2);
+	df.applyPattern("#0.##");
+	Double tx1 ;
+	Double tx2 ;
+	
+	Double ttx1 = 0D;
+	Double ttx2 = 0D;
+	
+	for (String[] st:list) {
+		tx1 = (Double.parseDouble(st[1]) / Double.parseDouble(total[0]))*100;
+		tx2 = (Double.parseDouble(st[2]) / Double.parseDouble(total[1]))*100;
+		
+		ttx1 += tx1;
+		ttx2 += tx2;
+		//System.out.println("list : "+ Double.parseDouble(st[0]) / Double.parseDouble(total[0]) ) ;
+		
+	}
+	String[] taux = {"",""};
+	taux[0] =  df.format(ttx1) + " %";
+	taux[1] =  df.format(ttx2) + " %";
+	listTaux.add(taux);
+	return listTaux;
+}
+
 	
 	
 	

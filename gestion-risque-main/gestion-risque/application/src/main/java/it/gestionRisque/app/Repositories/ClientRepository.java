@@ -75,7 +75,7 @@ public interface ClientRepository extends JpaRepository<Client, Long> {
 			+ " group by 1 order by 1"	,nativeQuery = true)	
     List<String[]> findGroupedBySecteur(@Param("daterepo")String daterepo);
     
-    @Query( value= "select cast(sum(a.anneePrec) as character varying) as anneePrec, cast(sum(a.annee) as character varying) as annee from(\r\n"
+    @Query( value= "select sum(anneePrec) as anneePrec,  sum(annee) as annee from(\r\n"
 			+ "SELECT sum(solde_balance) annee, 0 anneePrec, desc_secteur FROM public.client\r\n"
 			+ "where client.reporting_date=to_date(:daterepo,'yyyy-MM-dd')\r\n"
 			+ "group by code_secteur, desc_secteur, reporting_date\r\n"
@@ -107,7 +107,7 @@ public interface ClientRepository extends JpaRepository<Client, Long> {
     List<String[]> findGroupedByZone(@Param("daterepo")String daterepo);
     
     @Query(value="select sum(a.montant) from (\r\n"
-    		+ "select count(c.solde_balance) montant,\r\n"
+    		+ "select sum(c.solde_balance) montant,\r\n"
     		+ "			 (case\r\n"
     		+ "			when c.desc_wilaya in ('ALGER','BOUMERDES','BLIDA','TIPAZA') then 'CENTRE' \r\n"
     		+ "			when c.desc_wilaya  in ('CONSTANTINE','SETIF','BEJAIA','MILA','OUM ELBOUAGHI','BOUIRA','BISKRA') then 'EST'\r\n"
@@ -118,5 +118,8 @@ public interface ClientRepository extends JpaRepository<Client, Long> {
     		+ "where c.reporting_date=to_date(:daterepo,'yyyy-MM-dd')"
     		+ "group by zone) a",nativeQuery = true)
     List<String[]> findTotalGroupedByZone(@Param("daterepo")String daterepo);
+    
+    
+  
 
 }
