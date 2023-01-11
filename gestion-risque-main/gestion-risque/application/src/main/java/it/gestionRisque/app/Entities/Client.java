@@ -134,10 +134,6 @@ public Client(String obligoreId, Date reportingDate,  String obligoreName,  Stri
 	 this.subsectorCodeDesc=subsectorCodeDesc;
 }
 
-
-
-
-
 // ----  Client From JSON
 	public static Client clientFromJSON(Map<String, String> data) throws ParseException {
 	 String obligorId = (data.get("ID_CLIENT")!= "" && data.get("ID_CLIENT")!=null)? data.get("ID_CLIENT"):null;

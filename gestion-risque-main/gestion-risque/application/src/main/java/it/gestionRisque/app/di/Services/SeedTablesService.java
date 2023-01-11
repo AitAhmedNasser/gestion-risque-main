@@ -25,6 +25,7 @@ import it.gestionRisque.app.Entities.Engagement;
 import it.gestionRisque.app.Entities.Impaye;
 import it.gestionRisque.app.Repositories.ClientRepository;
 import it.gestionRisque.app.Repositories.EngagementRepository;
+import it.gestionRisque.app.auth.entities.Agence;
 import lombok.AllArgsConstructor;
 
 @Service
@@ -39,6 +40,8 @@ public class SeedTablesService {
 	private EngagementsService engagementsService;
 	@Autowired
 	private CompteService compteService;
+	@Autowired
+	private AgenceService agenceService;
 
 	@Autowired
 	private ClientRepository clientRepository;
@@ -54,6 +57,7 @@ public class SeedTablesService {
 		List<Client> clientList = new ArrayList<Client>();
 		List<Engagement> engagementList = new ArrayList<Engagement>();
 		List<Compte> compteList = new ArrayList<Compte>();
+		List<Agence> agenceList = new ArrayList<Agence>();
 		List<Impaye> impayeList = new ArrayList<Impaye>();
 
 		// String fileName =
@@ -63,6 +67,7 @@ public class SeedTablesService {
 
 		List<String> existingClient = new ArrayList<String>();
 		List<String> existingCompte = new ArrayList<String>();
+		List<Long> existingCodeAgence = new ArrayList<Long>();
 
 		if (data != null && data.size() > 0) {
 			String ReportingDate = ""; // = (data.get(0).get("Date"));
@@ -72,6 +77,8 @@ public class SeedTablesService {
 				listReportingDate.add(ReportingDate);
 				String clientObligorId = element.get("ID_CLIENT");
 				String accountNumber = element.get("NUMERO_COMPTE");
+				Long codeAgence = element.get("CODE_AGENCE") != null ? Long.parseLong(element.get("CODE_AGENCE"))
+						: null;
 
 				if (clientObligorId != null && clientObligorId != "") {
 					if (!(existingClient.contains(clientObligorId))) {
@@ -83,12 +90,17 @@ public class SeedTablesService {
 						existingCompte.add(accountNumber);
 					}
 
+					if (!(existingCodeAgence.contains(codeAgence))) {
+						agenceList.add(Agence.agenceFromJSON(element));
+						existingCodeAgence.add(codeAgence);
+					}
+
 					engagementList.add(Engagement.engagementFromJSON(element));
 				}
 				// impayeList.add(Impaye.impayeFromJSON(element));
 
 			}
-			mySavingMethods(clientList, engagementList, compteList);
+			mySavingMethods(clientList, engagementList, compteList, agenceList);
 			for (int i = 0; i < listReportingDate.size(); i++) {
 				allEngagementByClient(listReportingDate.get(i));
 			}
@@ -104,10 +116,12 @@ public class SeedTablesService {
 	}
 
 	@Transactional
-	public void mySavingMethods(List<Client> clientList, List<Engagement> engagementList, List<Compte> compteList) {
+	public void mySavingMethods(List<Client> clientList, List<Engagement> engagementList, List<Compte> compteList,
+			List<Agence> agenceList) {
 		clientService.saveAllClients(clientList);
 		engagementsService.saveAllEngagements(engagementList);
 		compteService.saveAllCompte(compteList);
+		agenceService.saveAllAgences(agenceList);
 	}
 
 	// yasmiiiiiiiiiiiiiiiine
@@ -115,9 +129,8 @@ public class SeedTablesService {
 	public void allEngagementByClient(String reportingDate) throws ParseException {
 		// Map<String, Double> mapsold= new HashMap();
 		if (reportingDate == null)
-			return; 
-		Collection<Engagement> getengagement = engagementRepository
-				.findAllEngagementClient(reportingDate);
+			return;
+		Collection<Engagement> getengagement = engagementRepository.findAllEngagementClient(reportingDate);
 		// List<Client >clientlis = new ArrayList<Client>();
 		// clientlis= clientRepository.findAll();
 		Double x_Leasing = null;

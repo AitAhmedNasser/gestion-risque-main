@@ -32,25 +32,31 @@ public class ExcelToJsonService {
 		this.uploadUtil = uploadUtil;
 	}
 
-
 	int k = 0;
 
 	public List<Map<String, String>> upload(MultipartFile file) throws Exception {
 		// ***** Local path *****
+
 		//String filePath = "C:\\maven.1672152540411\\gestion-risque-main\\gestion-risque\\application\\src\\main\\resources\\"
 		//		+ file.getOriginalFilename();
 
 
 		// ***** Remote Path *****
-		 String filePath = "/home/gstrisques/Desktop/excel-files/" +
-		 file.getOriginalFilename();
+		// String filePath = "/home/gstrisques/Desktop/excel-files/" +
+		// file.getOriginalFilename();
+
+		String filePath = "C:\\test1\\maven.1673357832323\\gestion-risque-main\\gestion-risque\\application\\src\\main\\resources\\"
+				+ file.getOriginalFilename();
+
+//		 ***** Remote Path *****
+//		String filePath = "/home/gstrisques/Desktop/excel-files/" + file.getOriginalFilename();
+
 		File fileToMove = new File(filePath);
 		file.transferTo(fileToMove);
 
 		List<Map<String, String>> listToRender = new ArrayList<Map<String, String>>();
 		Workbook workbook = new XSSFWorkbook(filePath);
 		fileToMove.delete();
-
 
 		for (int s = 0; s < workbook.getNumberOfSheets(); s++) {
 
